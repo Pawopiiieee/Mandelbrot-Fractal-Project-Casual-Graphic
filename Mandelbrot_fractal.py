@@ -121,7 +121,7 @@ for point in iteration_list:
 	
 	pixel = mandelbrotDisplay.create_rectangle(point_plot, fill=tk_rgb, outline="yellow", width=0)
 print ('Test the Mandelbrot with python')
-print ('Iteration numbers present in the picture: ', present_iterations)
+print ('Total Iterations', present_iterations)
 
 mandelbrotDisplay.pack()
 mandelBrot.mainloop()
