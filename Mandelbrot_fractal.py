@@ -1,14 +1,9 @@
-import sys
-
-
-
-
+port sys
 
 def mandelbrotSet(x_mdb, y_mdb, ):
     # comes from ||z||^2 = x^2 + y^2 , iterate x*x + y*y  <= 4 or until max_iteration
     # starting point at x,y(0,0)
     validInput = False
-
     while not validInput:
 
         try:
@@ -138,7 +133,8 @@ print('Total Iterations', present_iterations)
 mandelbrotDisplay.pack()
 mandelBrot.mainloop()
 
-
+# This is the zoom function but doesnt work right now. to be updated
+""""
 def zoom(mouse_x, mouse_y, width, height, zoom_x, zoom_y, calculate=None):
     start_x = mouse_x - zoom_x
     end_x = mouse_x + zoom_x
@@ -172,3 +168,4 @@ def zoom(mouse_x, mouse_y, width, height, zoom_x, zoom_y, calculate=None):
             x += 1
 
     calculate.find_points(width, height, min_x, max_x, min_y, max_y)
+"""""
