@@ -1,4 +1,4 @@
-port sys
+import sys
 
 def mandelbrotSet(x_mdb, y_mdb, ):
     # comes from ||z||^2 = x^2 + y^2 , iterate x*x + y*y  <= 4 or until max_iteration
@@ -11,7 +11,7 @@ def mandelbrotSet(x_mdb, y_mdb, ):
             y = 0
 
             iteration = 0
-            max_iteration = 500
+            max_iteration = 15      #lower this number to run the file faster
 
             while x * x + y * y <= 4 and iteration < max_iteration:
                 equation = x * x - y * y + x_mdb
@@ -96,41 +96,76 @@ mandelbrotDisplay = Canvas(mandelBrot, bd=0, height=window_height, width=window_
 point_previous = a_min  # To keep track of the end of a pixel line in the window
 point_current = 0
 
-"""offset"""
-x = 2
-y = 3
 
-"""
-Loop 
-"""
-for point in iteration_list:
-    point_current = point[0]  # point on real number
+def print_function(red_indicator, blue_indicator, green_indicator, point_previous):     #this draws the mandelbrot set.. It is very slow now
+	x = 2
+	y = 3
+	for point in iteration_list:
+		point_current = point[0]  # point on real number
 
-    if point_current >= point_previous:
-        x += 1
-        numberOfIters = point[2]  # numbers of iterations
+		if point_current >= point_previous:
+			x += 1
+			numberOfIters = point[2]  # numbers of iterations
 
-    else:  # new line starts
-        x = 3
-        y += 1
-        numberOfIters = point[2]  # point on imaginary numbers
+		else:  # new line starts
+			x = 3
+			y += 1
+			numberOfIters = point[2]  # point on imaginary numbers
 
-    point_previous = point_current
-    point_plot = [x, y, x, y]  # 2D mandelbrot
+		point_previous = point_current
+		point_plot = [x, y, x, y]  # 2D mandelbrot
 
-    colour = log(numberOfIters, iter_range) * 255
+		red_color = log(numberOfIters, iter_range) * 255 * red_indicator
+		green_color = log(numberOfIters, iter_range) * 255 * green_indicator
+		blue_color = log(numberOfIters, iter_range) * 255 * blue_indicator
 
-    colour = int(colour)
-    if colour > 255:
-        colour = 255
+		red_color = int(red_color)
+		green_color=int(green_color)
+		blue_color=int(blue_color)
+		if red_color>250:
+			red_color=250
+		if green_color>250:
+			green_color=250
+		if blue_color>250:
+			blue_color=250
+		tk_rgb = "#%02x%02x%02x" % (red_color, green_color, blue_color)  # put green and blue color as 0
 
-    tk_rgb = "#%02x%02x%02x" % (colour, 0, 0)  # put green and blue color as 0
+		pixel = mandelbrotDisplay.create_rectangle(point_plot, fill=tk_rgb, outline="yellow", width=0)
 
-    pixel = mandelbrotDisplay.create_rectangle(point_plot, fill=tk_rgb, outline="yellow", width=0)
 print('Test the Mandelbrot with python')
 print('Total Iterations', present_iterations)
+def red():		#These change the color in the mandelbrot set. Changing the color takes a lot of time, but works
+	print_function(1,0,0,a_min)	#1 means it has the color in it 0 means not
+	print("red")
+def yellow():
+	print_function(1,0,1,a_min)
+	print("yellow")
+
+def start():
+	print_function(1,1,1,a_min)
+	print("white")
+
+
+settings=Tk()		#new window for the user to choose different settings
+settings.title('Settings')
+color_label=Label(settings,text='Choose a color')
+ 
+color_label.grid(row=1,column=0)
+red_button=Button(settings,bg='red',width=12,command=red,activebackground='dark red')		#a red button, starting the function red()
+red_button.grid(row=2,column=1)
+yellow_button=Button(settings,bg='yellow',width=12,command=yellow,activebackground='gold')	#a yellow button, starting the function yellow()
+yellow_button.grid(row=2,column=0)
+'''
+white_button=Button(settings,bg='white',width=12,command=white,activebackground='gray')	#a spare button if we want to add another color
+white_button.grid(row=2,column=2)
+'''
+start_button=Button(settings,text='start',command=start)
+start_button.grid(row=0)
 
 mandelbrotDisplay.pack()
+
+settings.mainloop()
+
 mandelBrot.mainloop()
 
 # This is the zoom function but doesnt work right now. to be updated
