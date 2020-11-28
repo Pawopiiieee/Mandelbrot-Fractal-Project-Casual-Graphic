@@ -11,7 +11,7 @@ def mandelbrotSet(x_mdb, y_mdb, ):
             y = 0
 
             iteration = 0
-            max_iteration = 15      #lower this number to run the file faster
+            max_iteration = 500      #lower this number to run the file faster
 
             while x * x + y * y <= 4 and iteration < max_iteration:
                 equation = x * x - y * y + x_mdb
@@ -97,7 +97,7 @@ point_previous = a_min  # To keep track of the end of a pixel line in the window
 point_current = 0
 
 
-def print_function(red_indicator, blue_indicator, green_indicator, point_previous):     #this draws the mandelbrot set.. It is very slow now
+def print_function(red_indicator,green_indicator, blue_indicator, point_previous):     #this draws the mandelbrot set.. It is very slow now
 	x = 2
 	y = 3
 	for point in iteration_list:
@@ -138,7 +138,7 @@ def red():		#These change the color in the mandelbrot set. Changing the color ta
 	print_function(1,0,0,a_min)	#1 means it has the color in it 0 means not
 	print("red")
 def yellow():
-	print_function(1,0,1,a_min)
+	print_function(1,1,0,a_min)
 	print("yellow")
 
 def start():
@@ -164,9 +164,9 @@ start_button.grid(row=0)
 
 mandelbrotDisplay.pack()
 
-settings.mainloop()
-
 mandelBrot.mainloop()
+'''OwO'''
+settings.mainloop()
 
 # This is the zoom function but doesnt work right now. to be updated
 """"
