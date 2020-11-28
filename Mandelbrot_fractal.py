@@ -115,9 +115,9 @@ def print_function(red_indicator,green_indicator, blue_indicator, point_previous
 		point_previous = point_current
 		point_plot = [x, y, x, y]  # 2D mandelbrot
 
-		red_color = log(numberOfIters, iter_range) * 255 * red_indicator
-		green_color = log(numberOfIters, iter_range) * 255 * green_indicator
-		blue_color = log(numberOfIters, iter_range) * 255 * blue_indicator
+		red_color = log(numberOfIters, iter_range) *  red_indicator
+		green_color = log(numberOfIters, iter_range) *  green_indicator
+		blue_color = log(numberOfIters, iter_range) *  blue_indicator
 
 		red_color = int(red_color)
 		green_color=int(green_color)
@@ -135,11 +135,15 @@ def print_function(red_indicator,green_indicator, blue_indicator, point_previous
 print('Test the Mandelbrot with python')
 print('Total Iterations', present_iterations)
 def red():		#These change the color in the mandelbrot set. Changing the color takes a lot of time, but works
-	print_function(1,0,0,a_min)	#1 means it has the color in it 0 means not
+	print_function(255,0,0,a_min)	#the numbers represent the rgb
 	print("red")
 def yellow():
-	print_function(1,1,0,a_min)
+	print_function(255,255,0,a_min)
 	print("yellow")
+
+def purple():
+    print_function(98,0,58,a_min)
+    print("purple")
 
 def start():
 	print_function(1,1,1,a_min)
@@ -154,11 +158,11 @@ color_label.grid(row=1,column=0)
 red_button=Button(settings,bg='red',width=12,command=red,activebackground='dark red')		#a red button, starting the function red()
 red_button.grid(row=2,column=1)
 yellow_button=Button(settings,bg='yellow',width=12,command=yellow,activebackground='gold')	#a yellow button, starting the function yellow()
-yellow_button.grid(row=2,column=0)
-'''
-white_button=Button(settings,bg='white',width=12,command=white,activebackground='gray')	#a spare button if we want to add another color
-white_button.grid(row=2,column=2)
-'''
+yellow_button.grid(row=2,column=0)                                                          
+
+purple_button=Button(settings,bg='#62003a',width=12,command=purple,activebackground='#43002d')	#a purple button, starting the function purple()
+purple_button.grid(row=2,column=2)
+
 start_button=Button(settings,text='start',command=start)
 start_button.grid(row=0)
 
