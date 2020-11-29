@@ -128,7 +128,7 @@ def print_function(red_indicator,green_indicator, blue_indicator, point_previous
 			green_color=250
 		if blue_color>250:
 			blue_color=250
-		tk_rgb = "#%02x%02x%02x" % (red_color, green_color, blue_color)  # put green and blue color as 0
+		tk_rgb = "#%02x%02x%02x" % (red_color, green_color, blue_color)
 
 		pixel = mandelbrotDisplay.create_rectangle(point_plot, fill=tk_rgb, outline="yellow", width=0)
 
@@ -150,16 +150,15 @@ def start():
 	print("white")
 
 
-settings=Tk()		#new window for the user to choose different settings
+settings=Tk()		#new window for the user to choose different settings like color
 settings.title('Settings')
 color_label=Label(settings,text='Choose a color')
  
 color_label.grid(row=1,column=0)
-red_button=Button(settings,bg='red',width=12,command=red,activebackground='dark red')		#a red button, starting the function red()
+red_button=Button(settings,bg='red',width=12,command=red,activebackground='dark red')		    #a red button, starting the function red()
 red_button.grid(row=2,column=1)
-yellow_button=Button(settings,bg='yellow',width=12,command=yellow,activebackground='gold')	#a yellow button, starting the function yellow()
-yellow_button.grid(row=2,column=0)                                                          
-
+yellow_button=Button(settings,bg='yellow',width=12,command=yellow,activebackground='gold')  	#a yellow button, starting the function yellow()
+yellow_button.grid(row=2,column=0)                                                              
 purple_button=Button(settings,bg='#62003a',width=12,command=purple,activebackground='#43002d')	#a purple button, starting the function purple()
 purple_button.grid(row=2,column=2)
 
