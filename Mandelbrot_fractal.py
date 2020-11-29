@@ -98,6 +98,7 @@ point_current = 0
 
 
 def print_function(red_indicator,green_indicator, blue_indicator, point_previous):     #this draws the mandelbrot set.. It is very slow now
+	mandelbrotDisplay.delete("all")     #removes the previous mandelbrot so you don't draw over it, I think this will make it more stable and will speed it up
 	x = 2
 	y = 3
 	for point in iteration_list:
@@ -131,6 +132,8 @@ def print_function(red_indicator,green_indicator, blue_indicator, point_previous
 		tk_rgb = "#%02x%02x%02x" % (red_color, green_color, blue_color)
 
 		pixel = mandelbrotDisplay.create_rectangle(point_plot, fill=tk_rgb, outline="yellow", width=0)
+	mandelbrotDisplay.pack()        #This displays the just made mandelbrot
+	print('done')
 
 print('Test the Mandelbrot with python')
 print('Total Iterations', present_iterations)
@@ -146,7 +149,7 @@ def purple():
     print("purple")
 
 def start():
-	print_function(1,1,1,a_min)
+	print_function(255,255,255,a_min)
 	print("white")
 
 
@@ -165,7 +168,7 @@ purple_button.grid(row=2,column=2)
 start_button=Button(settings,text='start',command=start)
 start_button.grid(row=0)
 
-mandelbrotDisplay.pack()
+
 
 mandelBrot.mainloop()
 '''OwO'''
