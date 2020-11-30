@@ -11,7 +11,7 @@ def mandelbrotSet(x_mdb, y_mdb, ):
             y = 0
 
             iteration = 0
-            max_iteration = 500      #lower this number to run the file faster
+            max_iteration = 50      #lower this number to run the file faster
 
             while x * x + y * y <= 4 and iteration < max_iteration:
                 equation = x * x - y * y + x_mdb
@@ -158,11 +158,11 @@ settings.title('Settings')
 color_label=Label(settings,text='Choose a color')
  
 color_label.grid(row=1,column=0)
-red_button=Button(settings,bg='red',text='RED',width=12,command=red,activebackground='dark red')		    #a red button, starting the function red()
+red_button=Button(settings,bg='red',text='RED',fg='red',width=12,command=red,activeforeground='dark red',activebackground='dark red')		    #a red button, starting the function red()
 red_button.grid(row=2,column=1)
-yellow_button=Button(settings,bg='yellow',width=12,text='YELLOW',command=yellow,activebackground='gold')  	#a yellow button, starting the function yellow()
+yellow_button=Button(settings,bg='yellow',width=12,fg='yellow',text='YELLOW',activeforeground='gold',command=yellow,activebackground='gold')  	#a yellow button, starting the function yellow()
 yellow_button.grid(row=2,column=0)                                                              
-purple_button=Button(settings,bg='#62003a',width=12,text='PURPLE',command=purple,activebackground='#43002d')	#a purple button, starting the function purple()
+purple_button=Button(settings,bg='#62003a',width=12,fg='#62003a',text='PURPLE',activeforeground='#43002d',command=purple,activebackground='#43002d')	#a purple button, starting the function purple()
 purple_button.grid(row=2,column=2)
 
 start_button=Button(settings,text='start',command=start)
