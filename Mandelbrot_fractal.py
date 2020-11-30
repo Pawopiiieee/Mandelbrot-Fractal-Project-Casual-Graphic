@@ -119,7 +119,7 @@ def print_function(red_indicator,green_indicator, blue_indicator, point_previous
 		red_color = log(numberOfIters, iter_range) *  red_indicator
 		green_color = log(numberOfIters, iter_range) *  green_indicator
 		blue_color = log(numberOfIters, iter_range) *  blue_indicator
-
+ 
 		red_color = int(red_color)
 		green_color=int(green_color)
 		blue_color=int(blue_color)
@@ -148,7 +148,7 @@ def purple():
     print_function(98,0,58,a_min)
     print("purple")
 
-def start():
+def start():            #the start button makes a white mandelbrot
 	print_function(255,255,255,a_min)
 	print("white")
 
@@ -158,11 +158,11 @@ settings.title('Settings')
 color_label=Label(settings,text='Choose a color')
  
 color_label.grid(row=1,column=0)
-red_button=Button(settings,bg='red',width=12,command=red,activebackground='dark red')		    #a red button, starting the function red()
+red_button=Button(settings,bg='red',text='RED',width=12,command=red,activebackground='dark red')		    #a red button, starting the function red()
 red_button.grid(row=2,column=1)
-yellow_button=Button(settings,bg='yellow',width=12,command=yellow,activebackground='gold')  	#a yellow button, starting the function yellow()
+yellow_button=Button(settings,bg='yellow',width=12,text='YELLOW',command=yellow,activebackground='gold')  	#a yellow button, starting the function yellow()
 yellow_button.grid(row=2,column=0)                                                              
-purple_button=Button(settings,bg='#62003a',width=12,command=purple,activebackground='#43002d')	#a purple button, starting the function purple()
+purple_button=Button(settings,bg='#62003a',width=12,text='PURPLE',command=purple,activebackground='#43002d')	#a purple button, starting the function purple()
 purple_button.grid(row=2,column=2)
 
 start_button=Button(settings,text='start',command=start)
@@ -171,7 +171,7 @@ start_button.grid(row=0)
 
 
 mandelBrot.mainloop()
-'''OwO'''
+
 settings.mainloop()
 
 # This is the zoom function but doesnt work right now. to be updated
