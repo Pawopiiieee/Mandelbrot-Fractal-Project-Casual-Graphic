@@ -1,6 +1,6 @@
-port sys
+import sys
 
-def mandelbrotSet(x_mdb, y_mdb, ):
+def mandelbrotSet(x_mdb, y_mdb,):
     # comes from ||z||^2 = x^2 + y^2 , iterate x*x + y*y  <= 4 or until max_iteration
     # starting point at x,y(0,0)
     validInput = False
@@ -11,8 +11,8 @@ def mandelbrotSet(x_mdb, y_mdb, ):
             y = 0
 
             iteration = 0
-            max_iteration = 500
-
+            max_iteration = 500        #lower this number to run the file faster
+                                      #it will eventually be a variable chosen by user
             while x * x + y * y <= 4 and iteration < max_iteration:
                 equation = x * x - y * y + x_mdb
                 y = 2 * x * y + y_mdb
@@ -29,11 +29,11 @@ def mandelbrotSet(x_mdb, y_mdb, ):
             print("Invalid Input. Try again")
 
 
-# Coordinate point. PLEASE DON'T CHANGE, otherwise the little boi will get chubby shape
-a_min = -2.10  # axis ranges:
+# Coordinate point. PLEASE DON'T CHANGE, otherwise the little boi will get chubby shape 
+a_min = -2.10  # axis ranges:                                 
 a_max = 1.15  # a horizontal, real numbers part
 b_min = -1.80  # b vertical, imaginary numbers part
-b_max = 1.60
+b_max = 1.60                                            #We could make the user have a distort button of some sorts if we do wanna mess with it
 
 # window scales can be altered
 
@@ -80,8 +80,7 @@ for i in range(len(b_axis)):
 highest_iteration = max(present_iterations)  # highest and lowest iteration numbers
 lowest_iteration = min(present_iterations)
 
-colour_step = int(
-    255 / (highest_iteration - lowest_iteration))  # divide 255 colours linearly over the found iteration range
+colour_step = int(255 / (highest_iteration - lowest_iteration))  # divide 255 colours linearly over the found iteration range
 iter_range = (highest_iteration - lowest_iteration)
 
 # Draw picture.
@@ -89,6 +88,7 @@ from math import *
 from tkinter import *
 
 mandelBrot = Tk()
+mandelBrot.geometry('600x600')
 mandelBrot.title("Mandelbrot Set with Python")
 
 mandelbrotDisplay = Canvas(mandelBrot, bd=0, height=window_height, width=window_width)
@@ -96,42 +96,92 @@ mandelbrotDisplay = Canvas(mandelBrot, bd=0, height=window_height, width=window_
 point_previous = a_min  # To keep track of the end of a pixel line in the window
 point_current = 0
 
-"""offset"""
-x = 2
-y = 3
 
-"""
-Loop 
-"""
-for point in iteration_list:
-    point_current = point[0]  # point on real number
+def print_function(red_indicator,green_indicator, blue_indicator, point_previous):     #this draws the mandelbrot set.. It is very slow now
+	mandelbrotDisplay.delete("all")     #removes the previous mandelbrot so you don't draw over it, I think this will make it more stable and will speed it up
+	x = 2
+	y = 3
+	for point in iteration_list:
+		point_current = point[0]  # point on real number
 
-    if point_current >= point_previous:
-        x += 1
-        numberOfIters = point[2]  # numbers of iterations
+		if point_current >= point_previous:
+			x += 1
+			numberOfIters = point[2]  # numbers of iterations
 
-    else:  # new line starts
-        x = 3
-        y += 1
-        numberOfIters = point[2]  # point on imaginary numbers
+		else:  # new line starts
+			x = 3
+			y += 1
+			numberOfIters = point[2]  # point on imaginary numbers
 
-    point_previous = point_current
-    point_plot = [x, y, x, y]  # 2D mandelbrot
+		point_previous = point_current
+		point_plot = [x, y, x, y]  # 2D mandelbrot
 
-    colour = log(numberOfIters, iter_range) * 255
+		red_color = log(numberOfIters, iter_range) *  red_indicator
+		green_color = log(numberOfIters, iter_range) *  green_indicator
+		blue_color = log(numberOfIters, iter_range) *  blue_indicator
+ 
+		red_color = int(red_color)
+		green_color=int(green_color)
+		blue_color=int(blue_color)
+		if red_color>250:
+			red_color=250
+		if green_color>250:
+			green_color=250
+		if blue_color>250:
+			blue_color=250
+		tk_rgb = "#%02x%02x%02x" % (red_color, green_color, blue_color)
 
-    colour = int(colour)
-    if colour > 255:
-        colour = 255
+		pixel = mandelbrotDisplay.create_rectangle(point_plot, fill=tk_rgb, outline="yellow", width=0)
+	mandelbrotDisplay.pack()        #This displays the just made mandelbrot
+	print('done')
 
-    tk_rgb = "#%02x%02x%02x" % (colour, 0, 0)  # put green and blue color as 0
-
-    pixel = mandelbrotDisplay.create_rectangle(point_plot, fill=tk_rgb, outline="yellow", width=0)
 print('Test the Mandelbrot with python')
 print('Total Iterations', present_iterations)
+def red():		#These change the color in the mandelbrot set. Changing the color takes a lot of time, but works
+	print_function(255,0,0,a_min)	#the numbers represent the rgb
+	print("red")
+def yellow():
+	print_function(255,255,0,a_min)
+	print("yellow")
 
-mandelbrotDisplay.pack()
+def purple():
+    print_function(98,0,58,a_min)
+    print("purple")
+
+def start():            #the start button makes a white mandelbrot and makes the settings window appear
+	start_button.forget()
+	print_function(255,255,255,a_min)
+	print("white")
+
+
+settings=Tk()		#new window for the user to choose different settings like color
+settings.title('Settings')
+color_label=Label(settings,text='Choose a color')
+ 
+color_label.grid(row=1)
+red_button=Button(settings,bg='red',text='RED',fg='red',width=12,command=red,activeforeground='dark red',activebackground='dark red')		    #a red button, starting the function red()
+red_button.grid(row=2,column=1)
+yellow_button=Button(settings,bg='yellow',width=12,fg='yellow',text='YELLOW',activeforeground='gold',command=yellow,activebackground='gold')  	#a yellow button, starting the function yellow()
+yellow_button.grid(row=2,column=0)                                                              
+purple_button=Button(settings,bg='#62003a',width=12,fg='#62003a',text='PURPLE',activeforeground='#43002d',command=purple,activebackground='#43002d')	#a purple button, starting the function purple()
+purple_button.grid(row=2,column=2)
+
+iteration_label1=Label(settings,text='Amount of itterations, Lowering it will increase the speed, but decrease the quality)')
+                                        #Gotta find a way to make the label spand over multiple columns
+                                        #Maybe some of y'all can help out?
+
+iteration_entry=Entry(settings)             #a useless entry. I will have the user put in the amount of itterations
+iteration_label1.grid(row=3)
+iteration_entry.grid(row=4)
+
+start_button=Button(mandelBrot,text='start',command=start)
+start_button.pack()
+
+
+
 mandelBrot.mainloop()
+
+settings.mainloop()
 
 # This is the zoom function but doesnt work right now. to be updated
 """"
