@@ -89,6 +89,7 @@ from math import *
 from tkinter import *
 
 mandelBrot = Tk()
+mandelBrot.geometry('600x600')
 mandelBrot.title("Mandelbrot Set with Python")
 
 mandelbrotDisplay = Canvas(mandelBrot, bd=0, height=window_height, width=window_width)
