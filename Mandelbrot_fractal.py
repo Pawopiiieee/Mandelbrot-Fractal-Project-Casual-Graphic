@@ -1,6 +1,6 @@
 import sys
 
-def mandelbrotSet(x_mdb, y_mdb, ):
+def mandelbrotSet(x_mdb, y_mdb,):
     # comes from ||z||^2 = x^2 + y^2 , iterate x*x + y*y  <= 4 or until max_iteration
     # starting point at x,y(0,0)
     validInput = False
@@ -11,8 +11,8 @@ def mandelbrotSet(x_mdb, y_mdb, ):
             y = 0
 
             iteration = 0
-            max_iteration = 50      #lower this number to run the file faster
-
+            max_iteration = 500        #lower this number to run the file faster
+                                      #it will eventually be a variable chosen by user
             while x * x + y * y <= 4 and iteration < max_iteration:
                 equation = x * x - y * y + x_mdb
                 y = 2 * x * y + y_mdb
@@ -29,11 +29,11 @@ def mandelbrotSet(x_mdb, y_mdb, ):
             print("Invalid Input. Try again")
 
 
-# Coordinate point. PLEASE DON'T CHANGE, otherwise the little boi will get chubby shape
-a_min = -2.10  # axis ranges:
+# Coordinate point. PLEASE DON'T CHANGE, otherwise the little boi will get chubby shape 
+a_min = -2.10  # axis ranges:                                 
 a_max = 1.15  # a horizontal, real numbers part
 b_min = -1.80  # b vertical, imaginary numbers part
-b_max = 1.60
+b_max = 1.60                                            #We could make the user have a distort button of some sorts if we do wanna mess with it
 
 # window scales can be altered
 
@@ -80,8 +80,7 @@ for i in range(len(b_axis)):
 highest_iteration = max(present_iterations)  # highest and lowest iteration numbers
 lowest_iteration = min(present_iterations)
 
-colour_step = int(
-    255 / (highest_iteration - lowest_iteration))  # divide 255 colours linearly over the found iteration range
+colour_step = int(255 / (highest_iteration - lowest_iteration))  # divide 255 colours linearly over the found iteration range
 iter_range = (highest_iteration - lowest_iteration)
 
 # Draw picture.
@@ -149,7 +148,8 @@ def purple():
     print_function(98,0,58,a_min)
     print("purple")
 
-def start():            #the start button makes a white mandelbrot
+def start():            #the start button makes a white mandelbrot and makes the settings window appear
+	start_button.forget()
 	print_function(255,255,255,a_min)
 	print("white")
 
@@ -158,7 +158,7 @@ settings=Tk()		#new window for the user to choose different settings like color
 settings.title('Settings')
 color_label=Label(settings,text='Choose a color')
  
-color_label.grid(row=1,column=0)
+color_label.grid(row=1)
 red_button=Button(settings,bg='red',text='RED',fg='red',width=12,command=red,activeforeground='dark red',activebackground='dark red')		    #a red button, starting the function red()
 red_button.grid(row=2,column=1)
 yellow_button=Button(settings,bg='yellow',width=12,fg='yellow',text='YELLOW',activeforeground='gold',command=yellow,activebackground='gold')  	#a yellow button, starting the function yellow()
@@ -166,8 +166,16 @@ yellow_button.grid(row=2,column=0)
 purple_button=Button(settings,bg='#62003a',width=12,fg='#62003a',text='PURPLE',activeforeground='#43002d',command=purple,activebackground='#43002d')	#a purple button, starting the function purple()
 purple_button.grid(row=2,column=2)
 
-start_button=Button(settings,text='start',command=start)
-start_button.grid(row=0)
+iteration_label1=Label(settings,text='Amount of itterations, Lowering it will increase the speed, but decrease the quality)')
+                                        #Gotta find a way to make the label spand over multiple columns
+                                        #Maybe some of y'all can help out?
+
+iteration_entry=Entry(settings)             #a useless entry. I will have the user put in the amount of itterations
+iteration_label1.grid(row=3)
+iteration_entry.grid(row=4)
+
+start_button=Button(mandelBrot,text='start',command=start)
+start_button.pack()
 
 
 
