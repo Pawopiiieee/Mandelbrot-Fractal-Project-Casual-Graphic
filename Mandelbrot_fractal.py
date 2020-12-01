@@ -3,28 +3,28 @@ import sys
 def mandelbrotSet(x_mdb, y_mdb,):
     # comes from ||z||^2 = x^2 + y^2 , iterate x*x + y*y  <= 4 or until max_iteration
     # starting point at x,y(0,0)
+	# Recursive Function added, no more hard code
+
+    max_iteration = 20
+
+    def recur_mandelbrot(x,y,iteration_count):
+        equation = pow(x,2) - pow(y,2)  + x_mdb 
+        y = 2*x*y + y_mdb
+        x = equation
+        iteration_count += 1
+
+        if pow(x,2) + pow(y,2) <= 4 and iteration_count < max_iteration:
+            return recur_mandelbrot(x,y,iteration_count)
+        else:
+            return iteration_count 
+
     validInput = False
     while not validInput:
 
         try:
-            x = 0
-            y = 0
+            mandelbrot_value = recur_mandelbrot(0,0,0)
+            return mandelbrot_value
 
-            iteration = 0
-            max_iteration = 500        #lower this number to run the file faster
-                                      #it will eventually be a variable chosen by user
-            while x * x + y * y <= 4 and iteration < max_iteration:
-                equation = x * x - y * y + x_mdb
-                y = 2 * x * y + y_mdb
-                x = equation
-                iteration += 1
-
-            if iteration == max_iteration:
-                iterations = max_iteration
-            else:
-                iterations = iteration
-
-            return iterations
         except validInput:
             print("Invalid Input. Try again")
 
