@@ -1,87 +1,75 @@
-import sys
-
-def mandelbrotSet(x_mdb, y_mdb,):
-    # comes from ||z||^2 = x^2 + y^2 , iterate x*x + y*y  <= 4 or until max_iteration
-    # starting point at x,y(0,0)
-	# Recursive Function added, no more hard code
-
-    max_iteration = 20
-
-    def recur_mandelbrot(x,y,iteration_count):
-        equation = pow(x,2) - pow(y,2)  + x_mdb 
-        y = 2*x*y + y_mdb
-        x = equation
-        iteration_count += 1
-
-        if pow(x,2) + pow(y,2) <= 4 and iteration_count < max_iteration:
-            return recur_mandelbrot(x,y,iteration_count)
-        else:
-            return iteration_count 
-
-    validInput = False
-    while not validInput:
-
-        try:
-            mandelbrot_value = recur_mandelbrot(0,0,0)
-            return mandelbrot_value
-
-        except validInput:
-            print("Invalid Input. Try again")
-
 
 # Coordinate point. PLEASE DON'T CHANGE, otherwise the little boi will get chubby shape 
 a_min = -2.10  # axis ranges:                                 
 a_max = 1.15  # a horizontal, real numbers part
 b_min = -1.80  # b vertical, imaginary numbers part
-b_max = 1.60                                            #We could make the user have a distort button of some sorts if we do wanna mess with it
+b_max = 1.60   #We could make the user have a distort button of some sorts if we do wanna mess with it
 
 # window scales can be altered
-
 window_width = 600  # in pixels
 window_height = 600
 
-iteration_list = []  # list of coordinates on complex numbers and number of iterations on that point
-a_axis = []  # list of points on the real number axis
-b_axis = []  # list of points on the imaginary number axis
-tu_extending = ()  # tuple with complex numbers and iterations for extending iterList
+def mandelbrotSet(x_mdb, y_mdb,):
+    # Escape part comes from ||z||^2 = x^2 + y^2 , iterate x*x + y*y  <= 4 or until max_iteration
+    # starting point at x,y(0,0)
+	# Recursive Function added, no more hard code
+    max_iteration = 20
+    def recur_mandelbrot(x,y,iteration_count):
+        equation = pow(x,2) - pow(y,2)  + x_mdb 
+        y = 2*x*y + y_mdb
+        x = equation
+        iteration_count += 1
+        if pow(x,2) + pow(y,2) <= 4 and iteration_count < max_iteration:
+            return recur_mandelbrot(x,y,iteration_count)
+        else:
+            return iteration_count 
+
+    mandelbrot_value = recur_mandelbrot(0,0,0) #the intial values for x,y,iteration_count = 0
+    return mandelbrot_value
+
 
 """
 project range on window
 a_axis is list of coordinates -2.10  and 1.15 divided over window size pixels
 """
+def draw_mdb():
+    a_axis = []  # list of points on the real number axis
+    b_axis = []  # list of points on the imaginary number axis
+    step_a = (a_max - a_min) / window_width  # coordinates between each pixel
+    step_b = (b_max - b_min) / window_height  # coordinates between each pixel
+    temporary = a_min  # temporary variable to store values of a_min
+    while temporary < a_max:
+        a_axis = a_axis + [temporary]
+        temporary += step_a
 
-step_a = (a_max - a_min) / window_width  # coordinates between each pixel
-step_b = (b_max - b_min) / window_height  # coordinates between each pixel
-temporary = a_min  # temporary variable to store values of a_min
-while temporary < a_max:
-    a_axis = a_axis + [temporary]
-    temporary += step_a
-temporary = b_min  # temporary variable to store values of b_min
-while temporary < b_max:
-    b_axis = b_axis + [temporary]
-    temporary += step_b
+    temporary = b_min  # temporary variable to store values of b_min
+    while temporary < b_max:
+        b_axis = b_axis + [temporary]
+        temporary += step_b
 
-"""Calculation part contained the lists of complex numbers + iterations"""
+    #Calculation part contained the lists of complex numbers + iterations
+    present_iterations = set()  # To find numbers of current iterations.
+    iteration_list = []  # list of coordinates on complex numbers and number of iterations on that point
+    tu_extending = ()  # tuple with complex numbers and iterations for extending iterList
+    for i in range(len(b_axis)):
+        k = len(b_axis) - (i + 1)
 
-present_iterations = set()  # To find numbers of current iterations.
+        for j in range(len(a_axis)):
+            iters = mandelbrotSet(a_axis[j], b_axis[k])
+            tu_extending = ()
+            tu_extending = (a_axis[j], b_axis[k], iters)
+            iteration_list.append(tu_extending)
 
-for i in range(len(b_axis)):
-    k = len(b_axis) - (i + 1)
+            if iters not in present_iterations:
+                present_iterations.add(iters)
 
-    for j in range(len(a_axis)):
-        iters = mandelbrotSet(a_axis[j], b_axis[k])
-        tu_extending = ()
-        tu_extending = (a_axis[j], b_axis[k], iters)
-        iteration_list.append(tu_extending)
+    highest_iteration = max(present_iterations)  # highest and lowest iteration numbers
+    lowest_iteration = min(present_iterations)
+    iter_range = (highest_iteration - lowest_iteration)
+    return (iteration_list, iter_range) #both of them are going to pass through another function
 
-        if iters not in present_iterations:
-            present_iterations.add(iters)
+todo_rename_later = draw_mdb() #I'm out of idea for naming a new variable
 
-highest_iteration = max(present_iterations)  # highest and lowest iteration numbers
-lowest_iteration = min(present_iterations)
-
-colour_step = int(255 / (highest_iteration - lowest_iteration))  # divide 255 colours linearly over the found iteration range
-iter_range = (highest_iteration - lowest_iteration)
 
 # Draw picture.
 from math import *
@@ -89,15 +77,14 @@ from tkinter import *
 
 mandelBrot = Tk()
 mandelBrot.geometry('600x600')
-mandelBrot.title("Mandelbrot Set with Python")
+mandelBrot.title("The Mandelbrot Fractal with Python")
 
 mandelbrotDisplay = Canvas(mandelBrot, bd=0, height=window_height, width=window_width)
 
 point_previous = a_min  # To keep track of the end of a pixel line in the window
 point_current = 0
 
-
-def print_function(red_indicator,green_indicator, blue_indicator, point_previous):     #this draws the mandelbrot set.. It is very slow now
+def print_function(red_indicator,green_indicator, blue_indicator,iteration_list,iter_range, point_previous):     #this draws the mandelbrot set.. It is very slow now
 	mandelbrotDisplay.delete("all")     #removes the previous mandelbrot so you don't draw over it, I think this will make it more stable and will speed it up
 	x = 2
 	y = 3
@@ -116,8 +103,8 @@ def print_function(red_indicator,green_indicator, blue_indicator, point_previous
 		point_previous = point_current
 		point_plot = [x, y, x, y]  # 2D mandelbrot
 
-		red_color = log(numberOfIters, iter_range) *  red_indicator
-		green_color = log(numberOfIters, iter_range) *  green_indicator
+		red_color = log(numberOfIters, iter_range)*  red_indicator
+		green_color = log(numberOfIters, iter_range) * green_indicator
 		blue_color = log(numberOfIters, iter_range) *  blue_indicator
  
 		red_color = int(red_color)
@@ -126,31 +113,32 @@ def print_function(red_indicator,green_indicator, blue_indicator, point_previous
 		if red_color>250:
 			red_color=250
 		if green_color>250:
-			green_color=250
+		    green_color=250
 		if blue_color>250:
 			blue_color=250
 		tk_rgb = "#%02x%02x%02x" % (red_color, green_color, blue_color)
 
-		pixel = mandelbrotDisplay.create_rectangle(point_plot, fill=tk_rgb, outline="yellow", width=0)
-	mandelbrotDisplay.pack()        #This displays the just made mandelbrot
-	print('done')
+		mandelbrotDisplay.create_rectangle(point_plot, fill=tk_rgb, outline="yellow", width=0)
 
-print('Test the Mandelbrot with python')
-print('Total Iterations', present_iterations)
+	mandelbrotDisplay.pack()        #This displays the just made mandelbrot
+	print("Succssfully DONE")
+
+print("Test the Mandelbrot with Python")
+
 def red():		#These change the color in the mandelbrot set. Changing the color takes a lot of time, but works
-	print_function(255,0,0,a_min)	#the numbers represent the rgb
+	print_function(255,0,0,todo_rename_later[0], todo_rename_later[1],a_min)	#the numbers represent the rgb
 	print("red")
 def yellow():
-	print_function(255,255,0,a_min)
+	print_function(255,255,0,todo_rename_later[0], todo_rename_later[1],a_min)
 	print("yellow")
 
 def purple():
-    print_function(98,0,58,a_min)
+    print_function(98,0,58,todo_rename_later[0], todo_rename_later[1],a_min)
     print("purple")
 
 def start():            #the start button makes a white mandelbrot and makes the settings window appear
 	start_button.forget()
-	print_function(255,255,255,a_min)
+	print_function(255,255,255,todo_rename_later[0], todo_rename_later[1],a_min)
 	print("white")
 
 
@@ -177,45 +165,7 @@ iteration_entry.grid(row=4)
 start_button=Button(mandelBrot,text='start',command=start)
 start_button.pack()
 
-
-
 mandelBrot.mainloop()
 
 settings.mainloop()
 
-# This is the zoom function but doesnt work right now. to be updated
-""""
-def zoom(mouse_x, mouse_y, width, height, zoom_x, zoom_y, calculate=None):
-    start_x = mouse_x - zoom_x
-    end_x = mouse_x + zoom_x
-    start_y = mouse_y - zoom_y
-    end_y = mouse_y + zoom_y
-    x = 0
-    y = 0
-
-    min_x = 0
-    max_x = 0
-    min_y = 0
-    max_y = 0
-
-    with open('results.txt', 'r') as f:
-        for line in f:
-            if x % width == 0:
-                x = 0
-                y += 1
-
-            # Checks if line in file matches a vertex of the zoom
-            # rectangle and sets 
-            if x == start_x and y == start_y:
-                point = line.split(',')
-                min_x = float(point[1])
-                min_y = float(point[2])
-            elif x == end_x and y == end_y:
-                point = line.split(',')
-                max_x = float(point[1])
-                max_y = float(point[2])
-
-            x += 1
-
-    calculate.find_points(width, height, min_x, max_x, min_y, max_y)
-"""""
