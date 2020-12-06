@@ -214,17 +214,16 @@ purple_button=Button(settings,bg='#62003a',width=12,fg='#62003a',text='PURPLE',a
 purple_button.grid(row=2,column=2)
 
 iteration_label1=Label(settings,text='Amount of itterations, Lowering it will increase the speed, but decrease the quality)')
-                                        #Gotta find a way to make the label spand over multiple columns
-                                        #Maybe some of y'all can help out?
-
-iteration_entry=Entry(settings)             #a useless entry. I will have the user put in the amount of itterations
-iteration_label1.grid(row=3,column=0, columnspan =3)
+iteration_entry=Entry(settings)
+iteration_label1.grid(row=3,column=0, columnspan =5)
 iteration_entry.grid(row=4)
 
 start_button=Button(mandelBrot,text='start',command=start)
 start_button.pack()
 print("Test the Mandelbrot with Python")
 
+zoom_label=Label(settings,text="click the fractal to zoom in(takes a long time, be patient. This is still in alpha)")
+zoom_label.grid(row=5,column=0,columnspan=5)
 end_time = time.time()
 total = end_time - begin
 print ("Total time consumption = ", total)
