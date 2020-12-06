@@ -9,17 +9,16 @@ b_max = 1.60   #We could make the user have a distort button of some sorts if we
 window_width = 600  # in pixels
 window_height = 600
 
-def mandelbrotSet(x_mdb, y_mdb,):
+def mandelbrotSet(x_mdb, y_mdb,max_iterations): 
     # Escape part comes from ||z||^2 = x^2 + y^2 , iterate x*x + y*y  <= 4 or until max_iteration
     # starting point at x,y(0,0)
 	# Recursive Function added, no more hard code
-    max_iteration = 20
     def recur_mandelbrot(x,y,iteration_count):
         equation = pow(x,2) - pow(y,2)  + x_mdb 
         y = 2*x*y + y_mdb
         x = equation
         iteration_count += 1
-        if pow(x,2) + pow(y,2) <= 4 and iteration_count < max_iteration:
+        if pow(x,2) + pow(y,2) <= 4 and iteration_count < max_iterations:
             return recur_mandelbrot(x,y,iteration_count)
         else:
             return iteration_count 
@@ -32,7 +31,7 @@ def mandelbrotSet(x_mdb, y_mdb,):
 project range on window
 a_axis is list of coordinates -2.10  and 1.15 divided over window size pixels
 """
-def draw_mdb():
+def draw_mdb(max_iterations):
     a_axis = []  # list of points on the real number axis
     b_axis = []  # list of points on the imaginary number axis
     step_a = (a_max - a_min) / window_width  # coordinates between each pixel
@@ -55,7 +54,7 @@ def draw_mdb():
         k = len(b_axis) - (i + 1)
 
         for j in range(len(a_axis)):
-            iters = mandelbrotSet(a_axis[j], b_axis[k])
+            iters = mandelbrotSet(a_axis[j], b_axis[k],max_iterations)
             tu_extending = ()
             tu_extending = (a_axis[j], b_axis[k], iters)
             iteration_list.append(tu_extending)
@@ -68,7 +67,7 @@ def draw_mdb():
     iter_range = (highest_iteration - lowest_iteration)
     return (iteration_list, iter_range) #both of them are going to pass through another function
 
-todo_rename_later = draw_mdb() #I'm out of idea for naming a new variable
+
 
 
 # Draw picture.
@@ -84,10 +83,17 @@ mandelbrotDisplay = Canvas(mandelBrot, bd=0, height=window_height, width=window_
 point_previous = a_min  # To keep track of the end of a pixel line in the window
 point_current = 0
 
-def print_function(red_indicator,green_indicator, blue_indicator,iteration_list,iter_range, point_previous):     #this draws the mandelbrot set.. It is very slow now
+def print_function(red_indicator,green_indicator, blue_indicator,point_previous):     #this draws the mandelbrot set.. It is very slow now
 	mandelbrotDisplay.delete("all")     #removes the previous mandelbrot so you don't draw over it, I think this will make it more stable and will speed it up
 	x = 2
 	y = 3
+	try:
+		max_iterations=int(iteration_entry.get())
+	except:
+		max_iterations=20
+	todo_rename_later = draw_mdb(max_iterations)
+	iteration_list=todo_rename_later[0]
+	iter_range=todo_rename_later[1]
 	for point in iteration_list:
 		point_current = point[0]  # point on real number
 
@@ -126,19 +132,23 @@ def print_function(red_indicator,green_indicator, blue_indicator,iteration_list,
 print("Test the Mandelbrot with Python")
 
 def red():		#These change the color in the mandelbrot set. Changing the color takes a lot of time, but works
-	print_function(255,0,0,todo_rename_later[0], todo_rename_later[1],a_min)	#the numbers represent the rgb
+	start_button.forget()
+	print_function(255,0,0,a_min)	#the numbers represent the rgb
 	print("red")
+
 def yellow():
-	print_function(255,255,0,todo_rename_later[0], todo_rename_later[1],a_min)
+	start_button.forget()
+	print_function(255,255,0,a_min)
 	print("yellow")
 
 def purple():
-    print_function(98,0,58,todo_rename_later[0], todo_rename_later[1],a_min)
-    print("purple")
+	start_button.forget()
+	print_function(98,0,58,a_min)
+	print("purple")
 
 def start():            #the start button makes a white mandelbrot and makes the settings window appear
 	start_button.forget()
-	print_function(255,255,255,todo_rename_later[0], todo_rename_later[1],a_min)
+	print_function(255,255,255,a_min)
 	print("white")
 
 
@@ -146,7 +156,7 @@ settings=Tk()		#new window for the user to choose different settings like color
 settings.title('Settings')
 color_label=Label(settings,text='Choose a color')
  
-color_label.grid(row=1)
+color_label.grid(row=0,column=0)
 red_button=Button(settings,bg='red',text='RED',fg='red',width=12,command=red,activeforeground='dark red',activebackground='dark red')		    #a red button, starting the function red()
 red_button.grid(row=2,column=1)
 yellow_button=Button(settings,bg='yellow',width=12,fg='yellow',text='YELLOW',activeforeground='gold',command=yellow,activebackground='gold')  	#a yellow button, starting the function yellow()
@@ -159,7 +169,7 @@ iteration_label1=Label(settings,text='Amount of itterations, Lowering it will in
                                         #Maybe some of y'all can help out?
 
 iteration_entry=Entry(settings)             #a useless entry. I will have the user put in the amount of itterations
-iteration_label1.grid(row=3)
+iteration_label1.grid(row=3,column=0, columnspan =3)
 iteration_entry.grid(row=4)
 
 start_button=Button(mandelBrot,text='start',command=start)
