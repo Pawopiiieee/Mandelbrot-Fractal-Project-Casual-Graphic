@@ -1,25 +1,36 @@
+from math import *
+from tkinter import *
+import time
+begin = time.time()
 
+mandelBrot = Tk()
+mandelBrot.geometry('600x600')
+mandelBrot.title("The Mandelbrot Fractal with Python")
+
+# window scales can be altered
+window_width = 600  # in pixels
+window_height = 600
+mandelbrotDisplay = Canvas(mandelBrot, bd=0, height=window_height, width=window_width)
 # Coordinate point. PLEASE DON'T CHANGE, otherwise the little boi will get chubby shape 
 a_min = -2.10  # axis ranges:                                 
 a_max = 1.15  # a horizontal, real numbers part
 b_min = -1.80  # b vertical, imaginary numbers part
 b_max = 1.60   #We could make the user have a distort button of some sorts if we do wanna mess with it
 
-# window scales can be altered
-window_width = 600  # in pixels
-window_height = 600
+"""     
+Escape part comes from ||z||^2 = x^2 + y^2 , iterate x*x + y*y  <= 4 or until max_iteration
+starting point at x,y(0,0)
+Recursive Function added, no more hard code
+This whole function could be used for 3D Mandelbulb, made for z axis extension. 
+"""
+def mandelbrotSet(x_mdb, y_mdb,max_iterations): 
 
-def mandelbrotSet(x_mdb, y_mdb,):
-    # Escape part comes from ||z||^2 = x^2 + y^2 , iterate x*x + y*y  <= 4 or until max_iteration
-    # starting point at x,y(0,0)
-	# Recursive Function added, no more hard code
-    max_iteration = 20
     def recur_mandelbrot(x,y,iteration_count):
         equation = pow(x,2) - pow(y,2)  + x_mdb 
         y = 2*x*y + y_mdb
         x = equation
         iteration_count += 1
-        if pow(x,2) + pow(y,2) <= 4 and iteration_count < max_iteration:
+        if pow(x,2) + pow(y,2) <= 4 and iteration_count < max_iterations:
             return recur_mandelbrot(x,y,iteration_count)
         else:
             return iteration_count 
@@ -29,10 +40,10 @@ def mandelbrotSet(x_mdb, y_mdb,):
 
 
 """
-project range on window
-a_axis is list of coordinates -2.10  and 1.15 divided over window size pixels
+To project range on window
+
 """
-def draw_mdb():
+def draw_mdb(max_iterations):
     a_axis = []  # list of points on the real number axis
     b_axis = []  # list of points on the imaginary number axis
     step_a = (a_max - a_min) / window_width  # coordinates between each pixel
@@ -55,7 +66,7 @@ def draw_mdb():
         k = len(b_axis) - (i + 1)
 
         for j in range(len(a_axis)):
-            iters = mandelbrotSet(a_axis[j], b_axis[k])
+            iters = mandelbrotSet(a_axis[j], b_axis[k],max_iterations)
             tu_extending = ()
             tu_extending = (a_axis[j], b_axis[k], iters)
             iteration_list.append(tu_extending)
@@ -68,26 +79,27 @@ def draw_mdb():
     iter_range = (highest_iteration - lowest_iteration)
     return (iteration_list, iter_range) #both of them are going to pass through another function
 
-todo_rename_later = draw_mdb() #I'm out of idea for naming a new variable
-
-
 # Draw picture.
-from math import *
-from tkinter import *
-
-mandelBrot = Tk()
-mandelBrot.geometry('600x600')
-mandelBrot.title("The Mandelbrot Fractal with Python")
-
-mandelbrotDisplay = Canvas(mandelBrot, bd=0, height=window_height, width=window_width)
-
 point_previous = a_min  # To keep track of the end of a pixel line in the window
 point_current = 0
 
-def print_function(red_indicator,green_indicator, blue_indicator,iteration_list,iter_range, point_previous):     #this draws the mandelbrot set.. It is very slow now
+def get_max_iter():
+	
+	try:
+		max_iterations=int(iteration_entry.get())
+		return max_iterations
+	except:
+		max_iterations = 20
+		return max_iterations
+
+def print_function(red_indicator,green_indicator, blue_indicator,point_previous):     #this draws the mandelbrot set.. It is very slow now
 	mandelbrotDisplay.delete("all")     #removes the previous mandelbrot so you don't draw over it, I think this will make it more stable and will speed it up
 	x = 2
 	y = 3
+
+	todo_rename_later = draw_mdb(get_max_iter())
+	iteration_list=todo_rename_later[0]
+	iter_range=todo_rename_later[1]
 	for point in iteration_list:
 		point_current = point[0]  # point on real number
 
@@ -119,26 +131,73 @@ def print_function(red_indicator,green_indicator, blue_indicator,iteration_list,
 		tk_rgb = "#%02x%02x%02x" % (red_color, green_color, blue_color)
 
 		mandelbrotDisplay.create_rectangle(point_plot, fill=tk_rgb, outline="yellow", width=0)
-
+		
 	mandelbrotDisplay.pack()        #This displays the just made mandelbrot
 	print("Succssfully DONE")
 
-print("Test the Mandelbrot with Python")
+"""
+try rough zoom in / out
+For the zoom function, it's just a rought one. Also the scale for y-axis is up side down. Thus, this needs to be fixed
+FYI, I'm thinking about the redrawing part. Not sure if it successfully works, prolly I'll debug and see next week
+"""
+
+zoom_zoom = 4
+def compute_zoom(cen_x,cen_y):
+    global a_min,a_max,b_min,b_max,zoom_zoom
+
+    new_width = abs(a_max - a_min) / float(zoom_zoom)
+    new_height = abs(b_max - b_min) / float(zoom_zoom)
+    mouse_x = (cen_x / float(window_width)) * abs(a_max-a_min) + a_min
+    mouse_y = (cen_y / float(window_height)) * abs(b_max-b_min) + b_min #fix it, something wrong with y axis when zoom
+
+    zoom_rect = [0,0,0,0]
+    zoom_rect[0] = mouse_x - (new_width / float(2))
+    zoom_rect[1] = mouse_y - (new_height / float(2))
+    zoom_rect[2] = mouse_x + (new_width / float(2))
+    zoom_rect[3] = mouse_y + (new_height / float(2))
+
+    return zoom_rect
+
+def move_point(event):
+    global mandelbrotDisplay, window_height,window_width,zoom_rect
+    half_width = (window_width / zoom_zoom) / 2
+    half_height = (window_height / zoom_zoom) / 2
+
+    mandelbrotDisplay.delete(zoom_rect)
+    zoom_rect = mandelbrotDisplay.create_rectangle(event.x-half_width,event.y - half_height,event.x+half_width,event.y+half_height, width = 1)
+
+def zoom(event):
+    global a_max,a_min,b_max,b_min,todo_rename_later,max_iteration
+
+    react = compute_zoom(event.x,event.y)
+    a_min = react[0]
+    b_min = react[1]
+    a_max = react[2]
+    b_max = react[3]   
+    draw_mdb(get_max_iter())   #let's redraw a fractal 
+    start() #when zoom, i put it into grey scale so we can see the different/ how it goes wrong        
+zoom_rect = mandelbrotDisplay.create_rectangle(0,0,0,0)
+mandelbrotDisplay.bind('<Button-1>',zoom)
+mandelbrotDisplay.bind('<Button-2>',move_point)
 
 def red():		#These change the color in the mandelbrot set. Changing the color takes a lot of time, but works
-	print_function(255,0,0,todo_rename_later[0], todo_rename_later[1],a_min)	#the numbers represent the rgb
+	start_button.forget()
+	print_function(255,0,0,a_min)	#the numbers represent the rgb
 	print("red")
+
 def yellow():
-	print_function(255,255,0,todo_rename_later[0], todo_rename_later[1],a_min)
+	start_button.forget()
+	print_function(255,255,0,a_min)
 	print("yellow")
 
 def purple():
-    print_function(98,0,58,todo_rename_later[0], todo_rename_later[1],a_min)
-    print("purple")
+	start_button.forget()
+	print_function(98,0,58,a_min)
+	print("purple")
 
 def start():            #the start button makes a white mandelbrot and makes the settings window appear
 	start_button.forget()
-	print_function(255,255,255,todo_rename_later[0], todo_rename_later[1],a_min)
+	print_function(255,255,255,a_min)
 	print("white")
 
 
@@ -146,7 +205,7 @@ settings=Tk()		#new window for the user to choose different settings like color
 settings.title('Settings')
 color_label=Label(settings,text='Choose a color')
  
-color_label.grid(row=1)
+color_label.grid(row=0,column=0)
 red_button=Button(settings,bg='red',text='RED',fg='red',width=12,command=red,activeforeground='dark red',activebackground='dark red')		    #a red button, starting the function red()
 red_button.grid(row=2,column=1)
 yellow_button=Button(settings,bg='yellow',width=12,fg='yellow',text='YELLOW',activeforeground='gold',command=yellow,activebackground='gold')  	#a yellow button, starting the function yellow()
@@ -159,13 +218,16 @@ iteration_label1=Label(settings,text='Amount of itterations, Lowering it will in
                                         #Maybe some of y'all can help out?
 
 iteration_entry=Entry(settings)             #a useless entry. I will have the user put in the amount of itterations
-iteration_label1.grid(row=3)
+iteration_label1.grid(row=3,column=0, columnspan =3)
 iteration_entry.grid(row=4)
 
 start_button=Button(mandelBrot,text='start',command=start)
 start_button.pack()
+print("Test the Mandelbrot with Python")
 
+end_time = time.time()
+total = end_time - begin
+print ("Total time consumption = ", total)
 mandelBrot.mainloop()
 
 settings.mainloop()
-
