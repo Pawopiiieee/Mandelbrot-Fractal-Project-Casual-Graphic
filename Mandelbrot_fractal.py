@@ -4,7 +4,7 @@ import time
 begin = time.time()
 
 mandelBrot = Tk()
-mandelBrot.geometry('600x600')
+mandelBrot.geometry('400x200')
 mandelBrot.title("The Mandelbrot Fractal with Python")
 
 # window scales can be altered
@@ -132,7 +132,7 @@ def print_function(red_indicator,green_indicator, blue_indicator,point_previous)
 
 		mandelbrotDisplay.create_rectangle(point_plot, fill=tk_rgb, outline="yellow", width=0)
 		
-	mandelbrotDisplay.pack()        #This displays the just made mandelbrot
+	mandelbrotDisplay.grid(row=1)        #This displays the just made mandelbrot
 	print("Succssfully DONE")
 
 """
@@ -167,7 +167,7 @@ def move_point(event):
     zoom_rect = mandelbrotDisplay.create_rectangle(event.x-half_width,event.y - half_height,event.x+half_width,event.y+half_height, width = 1)
 
 def zoom(event):
-    global a_max,a_min,b_max,b_min,todo_rename_later,max_iteration
+    global a_max,a_min,b_max,b_min
 
     react = compute_zoom(event.x,event.y)
     a_min = react[0]
@@ -180,51 +180,83 @@ zoom_rect = mandelbrotDisplay.create_rectangle(0,0,0,0)
 mandelbrotDisplay.bind('<Button-1>',zoom)
 mandelbrotDisplay.bind('<Button-2>',move_point)
 
-def red():		#These change the color in the mandelbrot set. Changing the color takes a lot of time, but works
-	start_button.forget()
+def red():		#These change the color in the mandelbrot set. Changing the color takes time, but works
+	clean_start()
 	print_function(255,0,0,a_min)	#the numbers represent the rgb
 	print("red")
 
 def yellow():
-	start_button.forget()
+	clean_start()
 	print_function(255,255,0,a_min)
 	print("yellow")
 
 def purple():
-	start_button.forget()
+	clean_start()
 	print_function(98,0,58,a_min)
 	print("purple")
 
-def start():            #the start button makes a white mandelbrot and makes the settings window appear
-	start_button.forget()
+def start():            #the start button makes a white mandelbrot (and will make the settings window appear)
+	clean_start()
 	print_function(255,255,255,a_min)
 	print("white")
 
-
+def clean_start():
+	mandelBrot.geometry('600x600')
+	start_button.grid_forget()
+	Dini_Abdullahi.grid_forget()
+	Myrthe_Post.grid_forget()
+	Paworapas_Kakhai.grid_forget()
+	Robin_Tollenaar.grid_forget()
+	created_by.grid_forget()
 settings=Tk()		#new window for the user to choose different settings like color
 settings.title('Settings')
+
+'''Color Buttons'''
 color_label=Label(settings,text='Choose a color')
- 
 color_label.grid(row=0,column=0)
+
 red_button=Button(settings,bg='red',text='RED',fg='red',width=12,command=red,activeforeground='dark red',activebackground='dark red')		    #a red button, starting the function red()
 red_button.grid(row=2,column=1)
+
 yellow_button=Button(settings,bg='yellow',width=12,fg='yellow',text='YELLOW',activeforeground='gold',command=yellow,activebackground='gold')  	#a yellow button, starting the function yellow()
 yellow_button.grid(row=2,column=0)                                                              
+
 purple_button=Button(settings,bg='#62003a',width=12,fg='#62003a',text='PURPLE',activeforeground='#43002d',command=purple,activebackground='#43002d')	#a purple button, starting the function purple()
 purple_button.grid(row=2,column=2)
 
+'''Entry for iterations'''
 iteration_label1=Label(settings,text='Amount of itterations, Lowering it will increase the speed, but decrease the quality)')
 iteration_entry=Entry(settings)
+
 iteration_label1.grid(row=3,column=0, columnspan =5)
 iteration_entry.grid(row=4)
 
-start_button=Button(mandelBrot,text='start',command=start)
-start_button.pack()
-print("Test the Mandelbrot with Python")
-
+'''label for zoom'''
 zoom_label=Label(settings,text="click the fractal to zoom in(takes a long time, be patient. This is still in alpha)")
 zoom_label.grid(row=5,column=0,columnspan=5)
+
+'''starting screen'''
+
+title=Label(mandelBrot,text='MANDELBROT FRACTAL PROJECT')
+title.grid(row=0,column=1)
+start_button=Button(mandelBrot,text='start',command=start)
+start_button.grid(row=1,column=1)
+
+created_by=Label(mandelBrot,text='Created by')
+created_by.grid(row=2,column=0)
+
+Dini_Abdullahi=Label(mandelBrot,text='Dini Abdullahi ME2',fg='blue')
+Dini_Abdullahi.grid(row=3,column=0)
+Myrthe_Post=Label(mandelBrot,text='Myrthe Post ME1',fg='blue')
+Myrthe_Post.grid(row=4,column=0)
+Paworapas_Kakhai=Label(mandelBrot,text='Paworapas Kakhai ME1',fg='blue')
+Paworapas_Kakhai.grid(row=5,column=0)
+Robin_Tollenaar=Label(mandelBrot,text='Robin Tollenaar ME1',fg='blue')
+Robin_Tollenaar.grid(row=6,column=0)
+
+
 end_time = time.time()
+print("Test the Mandelbrot with Python")
 total = end_time - begin
 print ("Total time consumption = ", total)
 mandelBrot.mainloop()
