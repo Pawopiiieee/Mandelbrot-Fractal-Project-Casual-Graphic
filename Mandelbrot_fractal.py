@@ -25,18 +25,40 @@ This whole function could be used for 3D Mandelbulb, made for z axis extension.
 """
 def mandelbrotSet(x_mdb, y_mdb,max_iterations): 
 
-    def recur_mandelbrot(x,y,iteration_count):
-        equation = pow(x,2) - pow(y,2)  + x_mdb 
-        y = 2*x*y + y_mdb
-        x = equation
-        iteration_count += 1
-        if pow(x,2) + pow(y,2) <= 4 and iteration_count < max_iterations:
-            return recur_mandelbrot(x,y,iteration_count)
-        else:
-            return iteration_count 
+	def recur_mandelbrot(x,y,iteration_count):
+		"""
+		z^10
+		equation_x = pow(x,10) - 45*pow(x,8)*pow(y,2) + 210*pow(x,6)*pow(y,4) - 210*pow(x,4)*pow(y,6) + 45*pow(x,2)*pow(y,8) - pow(y,10) + x_mdb
+		y = 10*pow(x,9)*y + 10*x*pow(y,9) - 120*pow(x,3)*pow(y,7) - 120*pow(x,7)*pow(y,3) + 252*pow(x,5)*pow(y,5)+ y_mdb 
+		x = (equation_x) 
 
-    mandelbrot_value = recur_mandelbrot(0,0,0) #the intial values for x,y,iteration_count = 0
-    return mandelbrot_value
+		z^5
+		equation_x = pow(x,5) - 10*pow(x,3)*pow(y,2) + 5*x*pow(y,4) + x_mdb
+		y = pow(y,5) - 10*pow(x,2)*pow(y,3) +5*x*pow(y,4)+ y_mdb 
+		x = (equation_x)
+
+		z^4
+		equation_x = pow(x,4) - 6*pow(x,2)*pow(y,2) + pow(y,4) + x_mdb
+		y = 4*pow(x,3)*y - 4*x*pow(y,3)+ y_mdb 
+		x = (equation_x)
+		z^3
+		equation_x = pow(x,3) - 3*x*pow(y,2)  + x_mdb
+		y = -pow(y,3) +3*y*pow(x,2)+ y_mdb 
+		x = (equation_x)
+         
+		"""	
+		#z^2
+		equation_x = pow(x,2) - pow(y,2)  + x_mdb 
+		y = 2*x*y + y_mdb
+		x = equation_x
+		iteration_count += 1
+		if pow(x,2) + pow(y,2) <= 4 and iteration_count < max_iterations:
+			return recur_mandelbrot(x,y,iteration_count)
+		else:
+			return iteration_count 
+
+	mandelbrot_value = recur_mandelbrot(0,0,0) #the intial values for x,y,iteration_count = 0
+	return mandelbrot_value
 
 
 """
@@ -44,40 +66,40 @@ To project range on window
 
 """
 def draw_mdb(max_iterations):
-    a_axis = []  # list of points on the real number axis
-    b_axis = []  # list of points on the imaginary number axis
-    step_a = (a_max - a_min) / window_width  # coordinates between each pixel
-    step_b = (b_max - b_min) / window_height  # coordinates between each pixel
-    temporary = a_min  # temporary variable to store values of a_min
-    while temporary < a_max:
-        a_axis = a_axis + [temporary]
-        temporary += step_a
+	a_axis = []  # list of points on the real number axis
+	b_axis = []  # list of points on the imaginary number axis
+	step_a = (a_max - a_min) / window_width  # coordinates between each pixel
+	step_b = (b_max - b_min) / window_height  # coordinates between each pixel
+	temporary = a_min  # temporary variable to store values of a_min
+	while temporary < a_max:
+		a_axis = a_axis + [temporary]
+		temporary += step_a
 
-    temporary = b_min  # temporary variable to store values of b_min
-    while temporary < b_max:
-        b_axis = b_axis + [temporary]
-        temporary += step_b
+	temporary = b_min  # temporary variable to store values of b_min
+	while temporary < b_max:
+		b_axis = b_axis + [temporary]
+		temporary += step_b
 
-    #Calculation part contained the lists of complex numbers + iterations
-    present_iterations = set()  # To find numbers of current iterations.
-    iteration_list = []  # list of coordinates on complex numbers and number of iterations on that point
-    tu_extending = ()  # tuple with complex numbers and iterations for extending iterList
-    for i in range(len(b_axis)):
-        k = len(b_axis) - (i + 1)
+	#Calculation part contained the lists of complex numbers + iterations
+	present_iterations = set()  # To find numbers of current iterations.
+	iteration_list = []  # list of coordinates on complex numbers and number of iterations on that point
+	tu_extending = ()  # tuple with complex numbers and iterations for extending iterList
+	for i in range(len(b_axis)):
+		k = len(b_axis) - (i + 1)
 
-        for j in range(len(a_axis)):
-            iters = mandelbrotSet(a_axis[j], b_axis[k],max_iterations)
-            tu_extending = ()
-            tu_extending = (a_axis[j], b_axis[k], iters)
-            iteration_list.append(tu_extending)
+		for j in range(len(a_axis)):
+			iters = mandelbrotSet(a_axis[j], b_axis[k],max_iterations)
+			tu_extending = ()
+			tu_extending = (a_axis[j], b_axis[k], iters)
+			iteration_list.append(tu_extending)
 
-            if iters not in present_iterations:
-                present_iterations.add(iters)
+			if iters not in present_iterations:
+				present_iterations.add(iters)
 
-    highest_iteration = max(present_iterations)  # highest and lowest iteration numbers
-    lowest_iteration = min(present_iterations)
-    iter_range = (highest_iteration - lowest_iteration)
-    return (iteration_list, iter_range) #both of them are going to pass through another function
+	highest_iteration = max(present_iterations)  # highest and lowest iteration numbers
+	lowest_iteration = min(present_iterations)
+	iter_range = (highest_iteration - lowest_iteration)
+	return (iteration_list, iter_range) #both of them are going to pass through another function
 
 # Draw picture.
 point_previous = a_min  # To keep track of the end of a pixel line in the window
@@ -148,7 +170,7 @@ def print_function(red_indicator,green_indicator, blue_indicator,color):     #th
 		if red_color>255:
 			red_color=255
 		if green_color>255:
-		    green_color=255
+			green_color=255
 		if blue_color>255:
 			blue_color=255
 		tk_rgb = "#%02x%02x%02x" % (red_color, green_color, blue_color)
@@ -167,39 +189,39 @@ FYI, I'm thinking about the redrawing part. Not sure if it successfully works, p
 
 zoom_zoom = 4
 def compute_zoom(cen_x,cen_y):
-    global a_min,a_max,b_min,b_max,zoom_zoom
+	global a_min,a_max,b_min,b_max,zoom_zoom
 
-    new_width = abs(a_max - a_min) / float(zoom_zoom)
-    new_height = abs(b_max - b_min) / float(zoom_zoom)
-    mouse_x = (cen_x / float(window_width)) * abs(a_max-a_min) + a_min
-    mouse_y = (cen_y / float(window_height)) * abs(b_max-b_min) + b_min #fix it, something wrong with y axis when zoom
+	new_width = abs(a_max - a_min) / float(zoom_zoom)
+	new_height = abs(b_max - b_min) / float(zoom_zoom)
+	mouse_x = (cen_x / float(window_width)) * abs(a_max-a_min) + a_min
+	mouse_y = (cen_y / float(window_height)) * abs(b_max-b_min) + b_min #fix it, something wrong with y axis when zoom
 
-    zoom_rect = [0,0,0,0]
-    zoom_rect[0] = mouse_x - (new_width / float(2))
-    zoom_rect[1] = mouse_y - (new_height / float(2))
-    zoom_rect[2] = mouse_x + (new_width / float(2))
-    zoom_rect[3] = mouse_y + (new_height / float(2))
+	zoom_rect = [0,0,0,0]
+	zoom_rect[0] = mouse_x - (new_width / float(2))
+	zoom_rect[1] = mouse_y - (new_height / float(2))
+	zoom_rect[2] = mouse_x + (new_width / float(2))
+	zoom_rect[3] = mouse_y + (new_height / float(2))
 
-    return zoom_rect
+	return zoom_rect
 
 def move_point(event):
-    global mandelbrotDisplay, window_height,window_width,zoom_rect
-    half_width = (window_width / zoom_zoom) / 2
-    half_height = (window_height / zoom_zoom) / 2
+	global mandelbrotDisplay, window_height,window_width,zoom_rect
+	half_width = (window_width / zoom_zoom) / 2
+	half_height = (window_height / zoom_zoom) / 2
 
-    mandelbrotDisplay.delete(zoom_rect)
-    zoom_rect = mandelbrotDisplay.create_rectangle(event.x-half_width,event.y - half_height,event.x+half_width,event.y+half_height, width = 1)
+	mandelbrotDisplay.delete(zoom_rect)
+	zoom_rect = mandelbrotDisplay.create_rectangle(event.x-half_width,event.y - half_height,event.x+half_width,event.y+half_height, width = 1)
 
 def zoom(event):
-    global a_max,a_min,b_max,b_min
+	global a_max,a_min,b_max,b_min
 
-    react = compute_zoom(event.x,event.y)
-    a_min = react[0]
-    b_min = react[1]
-    a_max = react[2]
-    b_max = react[3]   
-    draw_mdb(get_max_iter())   #let's redraw a fractal 
-    start() #when zoom, i put it into grey scale so we can see the different/ how it goes wrong        
+	react = compute_zoom(event.x,event.y)
+	a_min = react[0]
+	b_min = react[1]
+	a_max = react[2]
+	b_max = react[3]   
+	draw_mdb(get_max_iter())   #let's redraw a fractal 
+	start() #when zoom, i put it into grey scale so we can see the different/ how it goes wrong        
 zoom_rect = mandelbrotDisplay.create_rectangle(0,0,0,0)
 mandelbrotDisplay.bind('<Button-1>',zoom)
 mandelbrotDisplay.bind('<Button-2>',move_point)
