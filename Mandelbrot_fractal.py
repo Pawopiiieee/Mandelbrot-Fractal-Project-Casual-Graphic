@@ -92,18 +92,20 @@ def get_max_iter():
 		max_iterations = 20
 		return max_iterations
 
-def print_function(red_indicator,green_indicator, blue_indicator,point_previous):     #this draws the mandelbrot set.. It is very slow now
+def print_function(red_indicator,green_indicator, blue_indicator,color):     #this draws the mandelbrot set.. It is very slow now
+	global a_min
 	mandelbrotDisplay.delete("all")     #removes the previous mandelbrot so you don't draw over it, I think this will make it more stable and will speed it up
 	x = 2
 	y = 3
-
+	max_iter=get_max_iter()
 	todo_rename_later = draw_mdb(get_max_iter())
 	iteration_list=todo_rename_later[0]
 	iter_range=todo_rename_later[1]
+	i=0
 	for point in iteration_list:
 		point_current = point[0]  # point on real number
 
-		if point_current >= point_previous:
+		if point_current >= a_min:
 			x += 1
 			numberOfIters = point[2]  # numbers of iterations
 
@@ -111,26 +113,48 @@ def print_function(red_indicator,green_indicator, blue_indicator,point_previous)
 			x = 3
 			y += 1
 			numberOfIters = point[2]  # point on imaginary numbers
-
-		point_previous = point_current
+		
+#		if color==red:                  gives you checkers
+#			if i>20:
+#				green_indicator=255
+#				if i>40:
+#					green_indicator=0
+#					i=0
+		
+		rainbow=((255,50,50),(255,130,255),(100,100,255),(80,255,80),(255,255,0),(255,170,0))
+		if color=="rainbow":
+			if numberOfIters<23:
+				red_color = log(numberOfIters, iter_range*0.1)* rainbow[numberOfIters%6][0]
+				green_color = log(numberOfIters, iter_range*0.1) * rainbow[numberOfIters%6][1]
+				blue_color = log(numberOfIters, iter_range*0.1) * rainbow[numberOfIters%6][2]
+			elif numberOfIters<max_iter:
+				red_color = log((numberOfIters), iter_range)* max_iter-numberOfIters	#to avoid confetti, the middle turns gray/black
+				green_color = log((numberOfIters), iter_range) *max_iter-numberOfIters
+				blue_color = log((numberOfIters), iter_range) * max_iter-numberOfIters
+			else:
+				red_color=0
+				green_color=0
+				blue_color=0
+		else:
+			red_color=log(numberOfIters, iter_range)*red_indicator
+			green_color=log(numberOfIters, iter_range)*green_indicator
+			blue_color=log(numberOfIters, iter_range)*blue_indicator
+		a_min = point_current
 		point_plot = [x, y, x, y]  # 2D mandelbrot
 
-		red_color = log(numberOfIters, iter_range)*  red_indicator
-		green_color = log(numberOfIters, iter_range) * green_indicator
-		blue_color = log(numberOfIters, iter_range) *  blue_indicator
- 
 		red_color = int(red_color)
 		green_color=int(green_color)
 		blue_color=int(blue_color)
-		if red_color>250:
-			red_color=250
-		if green_color>250:
-		    green_color=250
-		if blue_color>250:
-			blue_color=250
+		if red_color>255:
+			red_color=255
+		if green_color>255:
+		    green_color=255
+		if blue_color>255:
+			blue_color=255
 		tk_rgb = "#%02x%02x%02x" % (red_color, green_color, blue_color)
 
 		mandelbrotDisplay.create_rectangle(point_plot, fill=tk_rgb, outline="yellow", width=0)
+
 		
 	mandelbrotDisplay.grid(row=1)        #This displays the just made mandelbrot
 	print("Succssfully DONE")
@@ -182,23 +206,29 @@ mandelbrotDisplay.bind('<Button-2>',move_point)
 
 def red():		#These change the color in the mandelbrot set. Changing the color takes time, but works
 	clean_start()
-	print_function(255,0,0,a_min)	#the numbers represent the rgb
+	color='red'
+	print_function(255,0,0,"red")	#the numbers represent the rgb
 	print("red")
 
 def yellow():
 	clean_start()
-	print_function(255,255,0,a_min)
+	print_function(255,255,0,"yellow")
 	print("yellow")
 
 def purple():
 	clean_start()
-	print_function(98,0,58,a_min)
+	print_function(98,0,58,"purple")
 	print("purple")
 
+def rainbow():
+	clean_start()
+	print_function(0,0,0,"rainbow")
+	print("rainboww woww")
 def start():            #the start button makes a white mandelbrot (and will make the settings window appear)
 	clean_start()
-	print_function(255,255,255,a_min)
+	print_function(255,255,255,"white")
 	print("white")
+
 
 def clean_start():
 	mandelBrot.geometry('600x600')
@@ -224,16 +254,19 @@ yellow_button.grid(row=2,column=0)
 purple_button=Button(settings,bg='#62003a',width=12,fg='#62003a',text='PURPLE',activeforeground='#43002d',command=purple,activebackground='#43002d')	#a purple button, starting the function purple()
 purple_button.grid(row=2,column=2)
 
+rainbow_button=Button(settings,bg='#969696',width=12,fg='#3058d1',text='RAINBOW',activeforeground='#323232',command=rainbow,activebackground='#323232')	#a purple button, starting the function purple()
+rainbow_button.grid(row=3,column=0)
+
 '''Entry for iterations'''
 iteration_label1=Label(settings,text='Amount of itterations, Lowering it will increase the speed, but decrease the quality)')
 iteration_entry=Entry(settings)
 
-iteration_label1.grid(row=3,column=0, columnspan =5)
-iteration_entry.grid(row=4)
+iteration_label1.grid(row=4,column=0, columnspan =5)
+iteration_entry.grid(row=5)
 
 '''label for zoom'''
 zoom_label=Label(settings,text="click the fractal to zoom in(takes a long time, be patient. This is still in alpha)")
-zoom_label.grid(row=5,column=0,columnspan=5)
+zoom_label.grid(row=6,column=0,columnspan=5)
 
 '''starting screen'''
 
