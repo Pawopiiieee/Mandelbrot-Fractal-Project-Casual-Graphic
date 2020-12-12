@@ -17,6 +17,33 @@ a_max = 1.15  # a horizontal, real numbers part
 b_min = -1.80  # b vertical, imaginary numbers part
 b_max = 1.60   #We could make the user have a distort button of some sorts if we do wanna mess with it
 
+"""
+3D (Incompleted)
+def mandelbrotSet(x_mdb, y_mdb,z_mdb):
+    #comes from ||z||^2 = x^2 + y^2 , iterate x*x + y*y  <= 4 or until max_iteration
+    #starting point at x,y(0,0)
+
+    max_iteration = 20
+
+    def recur_mandelbrot(x,y,z,iteration_count):
+        equation = pow(x,2) - pow(y,2)  + x_mdb 
+        y = 2*x*y + y_mdb
+        x = equation * 0.5
+        z = 2*x*y + z_mdb
+        if pow(x,2) + pow(y,2) + pow(z,2)<= 4 and iteration_count < max_iteration:
+            return recur_mandelbrot(x,y,z,iteration_count+1)
+        else:
+            return iteration_count 
+
+    x = 0
+    y = 0
+    z = 0
+
+    mandelbrot_value = recur_mandelbrot(x,y,z,0)          
+    
+    return mandelbrot_value
+"""
+
 """     
 Escape part comes from ||z||^2 = x^2 + y^2 , iterate x*x + y*y  <= 4 or until max_iteration
 starting point at x,y(0,0)
