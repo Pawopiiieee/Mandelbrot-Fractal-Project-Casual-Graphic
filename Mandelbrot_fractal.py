@@ -115,8 +115,7 @@ def get_max_iter():
 		return max_iterations
 
 def print_function(red_indicator,green_indicator, blue_indicator):     #this draws the mandelbrot set.. It is very slow now
-	global a_min
-	a_min2=a_min
+	global a_min, point_previous
 	mandelbrotDisplay.delete("all")     #removes the previous mandelbrot so you don't draw over it, I think this will make it more stable and will speed it up
 	x = 2
 	y = 3
@@ -127,7 +126,7 @@ def print_function(red_indicator,green_indicator, blue_indicator):     #this dra
 	for point in iteration_list:
 		point_current = point[0]  # point on real number
 
-		if point_current >= a_min2:
+		if point_current >= point_previous:
 			x += 1
 			numberOfIters = point[2]  # numbers of iterations
 
@@ -163,7 +162,7 @@ def print_function(red_indicator,green_indicator, blue_indicator):     #this dra
 			green_color=log(numberOfIters, iter_range)*green_indicator
 			blue_color=log(numberOfIters, iter_range)*blue_indicator
 
-		a_min2 = point_current
+		point_previous = point_current
 		point_plot = [x, y, x, y]  # 2D mandelbrot
 
 		red_color = int(red_color)
