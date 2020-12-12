@@ -26,32 +26,35 @@ This whole function could be used for 3D Mandelbulb, made for z axis extension.
 def mandelbrotSet(x_mdb, y_mdb,max_iterations): 
 
 	def recur_mandelbrot(x,y,iteration_count):
-		"""
-		z^10
-		equation_x = pow(x,10) - 45*pow(x,8)*pow(y,2) + 210*pow(x,6)*pow(y,4) - 210*pow(x,4)*pow(y,6) + 45*pow(x,2)*pow(y,8) - pow(y,10) + x_mdb
-		y = 10*pow(x,9)*y + 10*x*pow(y,9) - 120*pow(x,3)*pow(y,7) - 120*pow(x,7)*pow(y,3) + 252*pow(x,5)*pow(y,5)+ y_mdb 
-		x = (equation_x) 
 
-		z^5
-		equation_x = pow(x,5) - 10*pow(x,3)*pow(y,2) + 5*x*pow(y,4) + x_mdb
-		y = pow(y,5) - 10*pow(x,2)*pow(y,3) +5*x*pow(y,4)+ y_mdb 
-		x = (equation_x)
+		selection = variable.get()
+		
+		if selection == 10:
+			equation_x = pow(x,10) - 45*pow(x,8)*pow(y,2) + 210*pow(x,6)*pow(y,4) - 210*pow(x,4)*pow(y,6) + 45*pow(x,2)*pow(y,8) - pow(y,10) + x_mdb
+			y = 10*pow(x,9)*y + 10*x*pow(y,9) - 120*pow(x,3)*pow(y,7) - 120*pow(x,7)*pow(y,3) + 252*pow(x,5)*pow(y,5)+ y_mdb 
+			x = equation_x
+			iteration_count += 1 
 
-		z^4
-		equation_x = pow(x,4) - 6*pow(x,2)*pow(y,2) + pow(y,4) + x_mdb
-		y = 4*pow(x,3)*y - 4*x*pow(y,3)+ y_mdb 
-		x = (equation_x)
-		z^3
-		equation_x = pow(x,3) - 3*x*pow(y,2)  + x_mdb
-		y = -pow(y,3) +3*y*pow(x,2)+ y_mdb 
-		x = (equation_x)
-         
-		"""	
-		#z^2
-		equation_x = pow(x,2) - pow(y,2)  + x_mdb 
-		y = 2*x*y + y_mdb
-		x = equation_x
-		iteration_count += 1
+		elif selection == 5:
+			equation_x = pow(x,5) - 10*pow(x,3)*pow(y,2) + 5*x*pow(y,4) + x_mdb
+			y = pow(y,5) - 10*pow(x,2)*pow(y,3) +5*x*pow(y,4)+ y_mdb 
+			x = equation_x
+			iteration_count += 1
+		elif selection == 4:
+			equation_x = pow(x,4) - 6*pow(x,2)*pow(y,2) + pow(y,4) + x_mdb
+			y = 4*pow(x,3)*y - 4*x*pow(y,3)+ y_mdb 
+			x = equation_x
+		elif selection == 3:
+			equation_x = pow(x,3) - 3*x*pow(y,2)  + x_mdb
+			y = -pow(y,3) +3*y*pow(x,2)+ y_mdb 
+			x = equation_x
+			iteration_count += 1
+		else:
+			equation_x = pow(x,2) - pow(y,2)  + x_mdb 
+			y = 2*x*y + y_mdb
+			x = equation_x  
+			iteration_count += 1
+
 		if pow(x,2) + pow(y,2) <= 4 and iteration_count < max_iterations:
 			return recur_mandelbrot(x,y,iteration_count)
 		else:
@@ -188,7 +191,7 @@ For the zoom function, it's just a rought one. Also the scale for y-axis is up s
 FYI, I'm thinking about the redrawing part. Not sure if it successfully works, prolly I'll debug and see next week
 """
 
-zoom_zoom = 4
+zoom_zoom = 5
 def compute_zoom(cen_x,cen_y):
 	global a_min,a_max,b_min,b_max,zoom_zoom
 
@@ -198,17 +201,17 @@ def compute_zoom(cen_x,cen_y):
 	mouse_y = (cen_y / float(window_height)) * abs(b_max-b_min) + b_min #fix it, something wrong with y axis when zoom
 
 	zoom_rect = [0,0,0,0]
-	zoom_rect[0] = mouse_x - (new_width / float(2))
-	zoom_rect[1] = mouse_y - (new_height / float(2))
-	zoom_rect[2] = mouse_x + (new_width / float(2))
-	zoom_rect[3] = mouse_y + (new_height / float(2))
+	zoom_rect[0] = mouse_x - (new_width / float(5))
+	zoom_rect[1] = mouse_y - (new_height / float(5))
+	zoom_rect[2] = mouse_x + (new_width / float(5))
+	zoom_rect[3] = mouse_y + (new_height / float(5))
 
 	return zoom_rect
 
 def move_point(event):
 	global mandelbrotDisplay, window_height,window_width,zoom_rect
-	half_width = (window_width / zoom_zoom) / 2
-	half_height = (window_height / zoom_zoom) / 2
+	half_width = (window_width / zoom_zoom) / 5
+	half_height = (window_height / zoom_zoom) / 5
 
 	mandelbrotDisplay.delete(zoom_rect)
 	zoom_rect = mandelbrotDisplay.create_rectangle(event.x-half_width,event.y - half_height,event.x+half_width,event.y+half_height, width = 1)
@@ -292,6 +295,16 @@ iteration_entry.grid(row=5)
 '''label for zoom'''
 zoom_label=Label(settings,text="click the fractal to zoom in(takes a long time, be patient. This is still in alpha)")
 zoom_label.grid(row=6,column=0,columnspan=5)
+
+'''label for exponent '''
+exp_option = ["2", "3", "4", "5", "10"] 
+variable = IntVar(settings)
+variable.set(exp_option[0])
+menu_option = OptionMenu(settings,variable, *exp_option)
+option_label = Label(settings,text= " Input the Exponent for the Mandelbrot Set")
+option_label.grid(row = 9, column = 1)
+menu_option.grid(row = 9, column = 0)
+
 
 '''starting screen'''
 
