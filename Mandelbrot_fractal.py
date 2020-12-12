@@ -114,7 +114,7 @@ def get_max_iter():
 		max_iterations = 20
 		return max_iterations
 
-def print_function(red_indicator,green_indicator, blue_indicator,color):     #this draws the mandelbrot set.. It is very slow now
+def print_function(red_indicator,green_indicator, blue_indicator):     #this draws the mandelbrot set.. It is very slow now
 	global a_min
 	mandelbrotDisplay.delete("all")     #removes the previous mandelbrot so you don't draw over it, I think this will make it more stable and will speed it up
 	x = 2
@@ -123,7 +123,6 @@ def print_function(red_indicator,green_indicator, blue_indicator,color):     #th
 	todo_rename_later = draw_mdb(get_max_iter())
 	iteration_list=todo_rename_later[0]
 	iter_range=todo_rename_later[1]
-	i=0
 	for point in iteration_list:
 		point_current = point[0]  # point on real number
 
@@ -144,15 +143,16 @@ def print_function(red_indicator,green_indicator, blue_indicator,color):     #th
 #					i=0
 		
 		rainbow=((255,50,50),(255,130,255),(100,100,255),(80,255,80),(255,255,0),(255,170,0))
-		if color=="rainbow":
-			if numberOfIters<23:
-				red_color = log(numberOfIters, iter_range*0.1)* rainbow[numberOfIters%6][0]
-				green_color = log(numberOfIters, iter_range*0.1) * rainbow[numberOfIters%6][1]
-				blue_color = log(numberOfIters, iter_range*0.1) * rainbow[numberOfIters%6][2]
-			elif numberOfIters<max_iter:
-				red_color = log((numberOfIters), iter_range)* max_iter-numberOfIters	#to avoid confetti, the middle turns gray/black
-				green_color = log((numberOfIters), iter_range) *max_iter-numberOfIters
-				blue_color = log((numberOfIters), iter_range) * max_iter-numberOfIters
+		if red_indicator==666:
+			if numberOfIters<max_iter:
+				if numberOfIters<23:
+					red_color =rainbow[numberOfIters%6][0]
+					green_color =rainbow[numberOfIters%6][1]
+					blue_color =rainbow[numberOfIters%6][2]
+				else:
+					red_color = 0	#to avoid confetti, the middle turns gray/black
+					green_color = 0
+					blue_color = log(numberOfIters, iter_range)*50
 			else:
 				red_color=0
 				green_color=0
@@ -161,6 +161,7 @@ def print_function(red_indicator,green_indicator, blue_indicator,color):     #th
 			red_color=log(numberOfIters, iter_range)*red_indicator
 			green_color=log(numberOfIters, iter_range)*green_indicator
 			blue_color=log(numberOfIters, iter_range)*blue_indicator
+
 		a_min = point_current
 		point_plot = [x, y, x, y]  # 2D mandelbrot
 
@@ -178,7 +179,7 @@ def print_function(red_indicator,green_indicator, blue_indicator,color):     #th
 		mandelbrotDisplay.create_rectangle(point_plot, fill=tk_rgb, outline="yellow", width=0)
 
 		
-	mandelbrotDisplay.grid(row=1)        #This displays the just made mandelbrot
+	mandelbrotDisplay.grid(row=0, column=0)        #This displays the just made mandelbrot
 	print("Succssfully DONE")
 
 """
@@ -228,27 +229,27 @@ mandelbrotDisplay.bind('<Button-2>',move_point)
 
 def red():		#These change the color in the mandelbrot set. Changing the color takes time, but works
 	clean_start()
-	color='red'
-	print_function(255,0,0,"red")	#the numbers represent the rgb
 	print("red")
+	print_function(255,0,0)	#the numbers represent the rgb
+
 
 def yellow():
 	clean_start()
-	print_function(255,255,0,"yellow")
+	print_function(255,255,0)
 	print("yellow")
 
 def purple():
 	clean_start()
-	print_function(98,0,58,"purple")
+	print_function(98,0,58)
 	print("purple")
 
 def rainbow():
 	clean_start()
-	print_function(0,0,0,"rainbow")
+	print_function(666,0,0)
 	print("rainboww woww")
 def start():            #the start button makes a white mandelbrot (and will make the settings window appear)
 	clean_start()
-	print_function(255,255,255,"white")
+	print_function(255,255,255)
 	print("white")
 
 
@@ -260,6 +261,8 @@ def clean_start():
 	Paworapas_Kakhai.grid_forget()
 	Robin_Tollenaar.grid_forget()
 	created_by.grid_forget()
+	title.grid_forget()
+
 settings=Tk()		#new window for the user to choose different settings like color
 settings.title('Settings')
 
