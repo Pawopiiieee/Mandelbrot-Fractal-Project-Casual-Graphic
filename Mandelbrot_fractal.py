@@ -375,12 +375,15 @@ variable = IntVar(settings)
 variable.set(exp_option[0])
 menu_option = OptionMenu(settings,variable, *exp_option)
 option_label = Label(settings,text= " Input the Exponent for the Mandelbrot Set")
-option_label.grid(row = 9, column = 1)
-menu_option.grid(row = 9, column = 0)
+option_label.grid(row = 9, column = 0)
+menu_option.grid(row = 9, column = 1)
 
 '''label for surprised fractal''' #Incase a user is curious about the mandelbrot
-surprised_button=Button(settings,bg='#969696',width=12,fg='#3058d1',text='surprised',activeforeground='#323232',command=surprised_mdb,activebackground='#323232')
-surprised_button.grid(row=11,column=0)
+surprised_button=Button(settings,bg='#969696',width=15,fg='#003333',text='Surprised Me',activeforeground='#323232',command=surprised_mdb)
+surprised_button.grid(row=11,column=1)
+surprised_label = Label(settings,text= " Do you want to see the secret surprise? Just click here!")
+surprised_label.grid(row = 11, column = 0)
+
 
 
 '''starting screen'''
