@@ -48,42 +48,44 @@ Use strategy pattern for the Mandelbrot
 so it could be easier to program the varient calculation/escape part 
 in case we want to add more feature to it
 """
+strategy = None
+
 class MandelbrotStrategy():
 	def mdb_calculation(self,x_mdb,y_mdb,x,y):
 		return (x,y)
 
-class Strategy_Z10(MandelbrotStrategy):
+class Strategy_Z10(MandelbrotStrategy): #when z^10 => (x+yi)^10 + c
 	def mdb_calculation(self, x_mdb, y_mdb, x, y):
 		equation_x = pow(x,10) - 45*pow(x,8)*pow(y,2) + 210*pow(x,6)*pow(y,4) - 210*pow(x,4)*pow(y,6) + 45*pow(x,2)*pow(y,8) - pow(y,10) + x_mdb
 		y = 10*pow(x,9)*y + 10*x*pow(y,9) - 120*pow(x,3)*pow(y,7) - 120*pow(x,7)*pow(y,3) + 252*pow(x,5)*pow(y,5)+ y_mdb 
 		x = equation_x
 		return (x, y)
-class Strategy_Z5(MandelbrotStrategy):
+class Strategy_Z5(MandelbrotStrategy): #when z^5 => (x+yi)^5 + c
 	def mdb_calculation(self, x_mdb, y_mdb, x, y):
 		equation_x = pow(x,5) - 10*pow(x,3)*pow(y,2) + 5*x*pow(y,4) + x_mdb
 		y = pow(y,5) - 10*pow(x,2)*pow(y,3) +5*pow(x,4)*y+ y_mdb 
 		x = equation_x
 		return (x, y)
-class Strategy_Z4(MandelbrotStrategy):
+class Strategy_Z4(MandelbrotStrategy): #when z^4 => (x+yi)^4 + c
 	def mdb_calculation(self, x_mdb, y_mdb, x, y):
 		equation_x = pow(x,4) - 6*pow(x,2)*pow(y,2) + pow(y,4) + x_mdb
 		y = 4*pow(x,3)*y - 4*x*pow(y,3)+ y_mdb 
 		x = equation_x
 		return (x, y)
-class Strategy_Z3(MandelbrotStrategy):
+class Strategy_Z3(MandelbrotStrategy): #when z^3 => (x+yi)^3 + c
 	def mdb_calculation(self, x_mdb, y_mdb, x, y):
 		equation_x = pow(x,3) - 3*x*pow(y,2)  + x_mdb
 		y = -pow(y,3) +3*y*pow(x,2)+ y_mdb 
 		x = equation_x
 		return (x, y)
-class Strategy_Z2(MandelbrotStrategy):
+class Strategy_Z2(MandelbrotStrategy): #when z^2 => (x+yi)^2 + c
 	def mdb_calculation(self, x_mdb, y_mdb, x, y):
 		equation_x =  pow(x,2) - pow(y,2)    + x_mdb 
 		y = 2*x*y + y_mdb
 		x = equation_x  
 		return (x, y)
 
-class Strategy_Surprised(MandelbrotStrategy):
+class Strategy_Surprised(MandelbrotStrategy): #when z + z^5 => (x+yi) + (x+yi)^5 + c
 	def mdb_calculation(self, x_mdb, y_mdb, x, y):
 		equation_x =  x+pow(x,5) - 10*pow(x,3)*pow(y,2) + 5*x*pow(y,4)    + x_mdb 
 		y = y+pow(y,5)-10*pow(x,2)*pow(y,3)+5*pow(x,4)*y + y_mdb
@@ -117,7 +119,12 @@ def mandelbrotSet(x_mdb, y_mdb,max_iterations, strategy):
 To project range on window
 
 """
-def draw_mdb(max_iterations, strategy):
+def draw_mdb(max_iterations):
+	global strategy
+
+	if strategy == None:
+		strategy = get_strategy_from_selection()
+
 	a_axis = []  # list of points on the real number axis
 	b_axis = []  # list of points on the imaginary number axis
 	step_a = (a_max - a_min) / (window_width) # coordinates between each pixel
@@ -165,8 +172,11 @@ def get_max_iter():
 	except:
 		max_iterations = 20
 		return max_iterations
-
-def get_strategy_from_selection():
+"""
+this function will take the value from drop down box 
+for number of exponent for the Mandelbrot Set (2,3,4,5,10)
+"""
+def get_strategy_from_selection(): 
 
 	selection = variable.get()
 		
@@ -182,17 +192,14 @@ def get_strategy_from_selection():
 		return Strategy_Z2()
 
 
-def print_function(red_indicator,green_indicator, blue_indicator, strategy = None):     #this draws the mandelbrot set.. It is very slow now
+def print_function(red_indicator,green_indicator, blue_indicator):     #this draws the mandelbrot set.. It is very slow now
 	global a_min, point_previous
 	mandelbrotDisplay.delete("all")     #removes the previous mandelbrot so you don't draw over it, I think this will make it more stable and will speed it up
-	
-	if strategy == None:
-		strategy = get_strategy_from_selection()
 	
 	x = 2
 	y = 3
 	max_iter=get_max_iter()
-	todo_rename_later = draw_mdb(get_max_iter(), strategy)
+	todo_rename_later = draw_mdb(get_max_iter())
 	iteration_list=todo_rename_later[0]
 	iter_range=todo_rename_later[1]
 	for point in iteration_list:
@@ -324,9 +331,12 @@ def start():            #the start button makes a white mandelbrot (and will mak
 	print_function(255,255,255)
 	print("white")
 
-def surprised_mdb():
+def surprised_mdb(): #this surprised Mandelbrot Fractal will take iteration = 20, rainbow color
+	global strategy
+
 	clean_start()
-	print_function(666,0,0,Strategy_Surprised())
+	strategy = Strategy_Surprised()
+	print_function(666,0,0)
 	print("SURPRISED")
 
 def clean_start():
