@@ -43,6 +43,52 @@ def mandelbrotSet(x_mdb, y_mdb,z_mdb):
 	
 	return mandelbrot_value
 """
+"""
+Use strategy pattern for the Mandelbrot 
+so it could be easier to program the varient calculation/escape part 
+in case we want to add more feature to it
+"""
+class MandelbrotStrategy():
+	def mdb_calculation(self,x_mdb,y_mdb,x,y):
+		return (x,y)
+
+class Strategy_Z10(MandelbrotStrategy):
+	def mdb_calculation(self, x_mdb, y_mdb, x, y):
+		equation_x = pow(x,10) - 45*pow(x,8)*pow(y,2) + 210*pow(x,6)*pow(y,4) - 210*pow(x,4)*pow(y,6) + 45*pow(x,2)*pow(y,8) - pow(y,10) + x_mdb
+		y = 10*pow(x,9)*y + 10*x*pow(y,9) - 120*pow(x,3)*pow(y,7) - 120*pow(x,7)*pow(y,3) + 252*pow(x,5)*pow(y,5)+ y_mdb 
+		x = equation_x
+		return (x, y)
+class Strategy_Z5(MandelbrotStrategy):
+	def mdb_calculation(self, x_mdb, y_mdb, x, y):
+		equation_x = pow(x,5) - 10*pow(x,3)*pow(y,2) + 5*x*pow(y,4) + x_mdb
+		y = pow(y,5) - 10*pow(x,2)*pow(y,3) +5*pow(x,4)*y+ y_mdb 
+		x = equation_x
+		return (x, y)
+class Strategy_Z4(MandelbrotStrategy):
+	def mdb_calculation(self, x_mdb, y_mdb, x, y):
+		equation_x = pow(x,4) - 6*pow(x,2)*pow(y,2) + pow(y,4) + x_mdb
+		y = 4*pow(x,3)*y - 4*x*pow(y,3)+ y_mdb 
+		x = equation_x
+		return (x, y)
+class Strategy_Z3(MandelbrotStrategy):
+	def mdb_calculation(self, x_mdb, y_mdb, x, y):
+		equation_x = pow(x,3) - 3*x*pow(y,2)  + x_mdb
+		y = -pow(y,3) +3*y*pow(x,2)+ y_mdb 
+		x = equation_x
+		return (x, y)
+class Strategy_Z2(MandelbrotStrategy):
+	def mdb_calculation(self, x_mdb, y_mdb, x, y):
+		equation_x =  pow(x,2) - pow(y,2)    + x_mdb 
+		y = 2*x*y + y_mdb
+		x = equation_x  
+		return (x, y)
+
+class Strategy_Surprised(MandelbrotStrategy):
+	def mdb_calculation(self, x_mdb, y_mdb, x, y):
+		equation_x =  x+pow(x,5) - 10*pow(x,3)*pow(y,2) + 5*x*pow(y,4)    + x_mdb 
+		y = y+pow(y,5)-10*pow(x,2)*pow(y,3)+5*pow(x,4)*y + y_mdb
+		x = equation_x
+		return (x, y) 
 
 """     
 Escape part comes from ||z||^2 = x^2 + y^2 , iterate x*x + y*y  <= 4 or until max_iteration
@@ -50,38 +96,13 @@ starting point at x,y(0,0)
 Recursive Function added, no more hard code
 This whole function could be used for 3D Mandelbulb, made for z axis extension. 
 """
-def mandelbrotSet(x_mdb, y_mdb,max_iterations): 
+def mandelbrotSet(x_mdb, y_mdb,max_iterations, strategy): 
 
 	def recur_mandelbrot(x,y,iteration_count):
 
-		selection = variable.get()
-		
-		if selection == 10:
-			equation_x = pow(x,10) - 45*pow(x,8)*pow(y,2) + 210*pow(x,6)*pow(y,4) - 210*pow(x,4)*pow(y,6) + 45*pow(x,2)*pow(y,8) - pow(y,10) + x_mdb
-			y = 10*pow(x,9)*y + 10*x*pow(y,9) - 120*pow(x,3)*pow(y,7) - 120*pow(x,7)*pow(y,3) + 252*pow(x,5)*pow(y,5)+ y_mdb 
-			x = equation_x
-			iteration_count += 1 
+		(x,y) = strategy.mdb_calculation(x_mdb, y_mdb, x, y)
 
-		elif selection == 5:
-			equation_x = pow(x,5) - 10*pow(x,3)*pow(y,2) + 5*x*pow(y,4) + x_mdb
-			y = pow(y,5) - 10*pow(x,2)*pow(y,3) +5*pow(x,4)*y+ y_mdb 
-			x = equation_x
-			iteration_count += 1
-		elif selection == 4:
-			equation_x = pow(x,4) - 6*pow(x,2)*pow(y,2) + pow(y,4) + x_mdb
-			y = 4*pow(x,3)*y - 4*x*pow(y,3)+ y_mdb 
-			x = equation_x
-			iteration_count += 1
-		elif selection == 3:
-			equation_x = pow(x,3) - 3*x*pow(y,2)  + x_mdb
-			y = -pow(y,3) +3*y*pow(x,2)+ y_mdb 
-			x = equation_x
-			iteration_count += 1
-		else:
-			equation_x = pow(x,2) - pow(y,2)  + x_mdb 
-			y = 2*x*y + y_mdb
-			x = equation_x  
-			iteration_count += 1
+		iteration_count += 1
 
 		if pow(x,2) + pow(y,2) <= 4 and iteration_count < max_iterations:
 			return recur_mandelbrot(x,y,iteration_count)
@@ -96,7 +117,7 @@ def mandelbrotSet(x_mdb, y_mdb,max_iterations):
 To project range on window
 
 """
-def draw_mdb(max_iterations):
+def draw_mdb(max_iterations, strategy):
 	a_axis = []  # list of points on the real number axis
 	b_axis = []  # list of points on the imaginary number axis
 	step_a = (a_max - a_min) / (window_width) # coordinates between each pixel
@@ -119,7 +140,7 @@ def draw_mdb(max_iterations):
 		k = len(b_axis) - (i + 1)
 
 		for j in range(len(a_axis)):
-			iters = mandelbrotSet(a_axis[j], b_axis[k],max_iterations)
+			iters = mandelbrotSet(a_axis[j], b_axis[k],max_iterations, strategy)
 			tu_extending = ()
 			tu_extending = (a_axis[j], b_axis[k], iters)
 			iteration_list.append(tu_extending)
@@ -145,13 +166,33 @@ def get_max_iter():
 		max_iterations = 20
 		return max_iterations
 
-def print_function(red_indicator,green_indicator, blue_indicator):     #this draws the mandelbrot set.. It is very slow now
+def get_strategy_from_selection():
+
+	selection = variable.get()
+		
+	if selection == 10:
+		return Strategy_Z10()
+	elif selection == 5:
+		return Strategy_Z5()
+	elif selection == 4:
+		return Strategy_Z4()
+	elif selection == 3:
+		return Strategy_Z3()
+	else:
+		return Strategy_Z2()
+
+
+def print_function(red_indicator,green_indicator, blue_indicator, strategy = None):     #this draws the mandelbrot set.. It is very slow now
 	global a_min, point_previous
 	mandelbrotDisplay.delete("all")     #removes the previous mandelbrot so you don't draw over it, I think this will make it more stable and will speed it up
+	
+	if strategy == None:
+		strategy = get_strategy_from_selection()
+	
 	x = 2
 	y = 3
 	max_iter=get_max_iter()
-	todo_rename_later = draw_mdb(get_max_iter())
+	todo_rename_later = draw_mdb(get_max_iter(), strategy)
 	iteration_list=todo_rename_later[0]
 	iter_range=todo_rename_later[1]
 	for point in iteration_list:
@@ -283,6 +324,10 @@ def start():            #the start button makes a white mandelbrot (and will mak
 	print_function(255,255,255)
 	print("white")
 
+def surprised_mdb():
+	clean_start()
+	print_function(666,0,0,Strategy_Surprised())
+	print("SURPRISED")
 
 def clean_start():
 	mandelBrot.geometry('600x600')
@@ -332,6 +377,10 @@ menu_option = OptionMenu(settings,variable, *exp_option)
 option_label = Label(settings,text= " Input the Exponent for the Mandelbrot Set")
 option_label.grid(row = 9, column = 1)
 menu_option.grid(row = 9, column = 0)
+
+'''label for surprised fractal''' #Incase a user is curious about the mandelbrot
+surprised_button=Button(settings,bg='#969696',width=12,fg='#3058d1',text='surprised',activeforeground='#323232',command=surprised_mdb,activebackground='#323232')
+surprised_button.grid(row=11,column=0)
 
 
 '''starting screen'''
