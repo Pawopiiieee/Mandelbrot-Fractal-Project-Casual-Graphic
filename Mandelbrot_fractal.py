@@ -64,7 +64,7 @@ def mandelbrotSet(x_mdb, y_mdb,max_iterations):
 
 		elif selection == 5:
 			equation_x = pow(x,5) - 10*pow(x,3)*pow(y,2) + 5*x*pow(y,4) + x_mdb
-			y = pow(y,5) - 10*pow(x,2)*pow(y,3) +5*x*pow(x,4)*y+ y_mdb 
+			y = pow(y,5) - 10*pow(x,2)*pow(y,3) +5*pow(x,4)*y+ y_mdb 
 			x = equation_x
 			iteration_count += 1
 		elif selection == 4:
