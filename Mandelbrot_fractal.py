@@ -15,33 +15,33 @@ mandelbrotDisplay = Canvas(mandelBrot, bd=0, height=window_height, width=window_
 a_min = -2.10  # axis ranges:                                 
 a_max = 1.15  # a horizontal, real numbers part
 b_min = -1.80  # b vertical, imaginary numbers part
-b_max = 1.60   #We could make the user have a distort button of some sorts if we do wanna mess with it
+b_max = 1.7   #We could make the user have a distort button of some sorts if we do wanna mess with it
 
 """
 3D (Incompleted)
 def mandelbrotSet(x_mdb, y_mdb,z_mdb):
-    #comes from ||z||^2 = x^2 + y^2 , iterate x*x + y*y  <= 4 or until max_iteration
-    #starting point at x,y(0,0)
+	#comes from ||z||^2 = x^2 + y^2 , iterate x*x + y*y  <= 4 or until max_iteration
+	#starting point at x,y(0,0)
 
-    max_iteration = 20
+	max_iteration = 20
 
-    def recur_mandelbrot(x,y,z,iteration_count):
-        equation = pow(x,2) - pow(y,2)  + x_mdb 
-        y = 2*x*y + y_mdb
-        x = equation * 0.5
-        z = 2*x*y + z_mdb
-        if pow(x,2) + pow(y,2) + pow(z,2)<= 4 and iteration_count < max_iteration:
-            return recur_mandelbrot(x,y,z,iteration_count+1)
-        else:
-            return iteration_count 
+	def recur_mandelbrot(x,y,z,iteration_count):
+		equation = pow(x,2) - pow(y,2)  + x_mdb 
+		y = 2*x*y + y_mdb
+		x = equation * 0.5
+		z = 2*x*y + z_mdb
+		if pow(x,2) + pow(y,2) + pow(z,2)<= 4 and iteration_count < max_iteration:
+			return recur_mandelbrot(x,y,z,iteration_count+1)
+		else:
+			return iteration_count 
 
-    x = 0
-    y = 0
-    z = 0
+	x = 0
+	y = 0
+	z = 0
 
-    mandelbrot_value = recur_mandelbrot(x,y,z,0)          
-    
-    return mandelbrot_value
+	mandelbrot_value = recur_mandelbrot(x,y,z,0)          
+	
+	return mandelbrot_value
 """
 
 """     
@@ -64,13 +64,14 @@ def mandelbrotSet(x_mdb, y_mdb,max_iterations):
 
 		elif selection == 5:
 			equation_x = pow(x,5) - 10*pow(x,3)*pow(y,2) + 5*x*pow(y,4) + x_mdb
-			y = pow(y,5) - 10*pow(x,2)*pow(y,3) +5*x*pow(y,4)+ y_mdb 
+			y = pow(y,5) - 10*pow(x,2)*pow(y,3) +5*x*pow(x,4)*y+ y_mdb 
 			x = equation_x
 			iteration_count += 1
 		elif selection == 4:
 			equation_x = pow(x,4) - 6*pow(x,2)*pow(y,2) + pow(y,4) + x_mdb
 			y = 4*pow(x,3)*y - 4*x*pow(y,3)+ y_mdb 
 			x = equation_x
+			iteration_count += 1
 		elif selection == 3:
 			equation_x = pow(x,3) - 3*x*pow(y,2)  + x_mdb
 			y = -pow(y,3) +3*y*pow(x,2)+ y_mdb 
@@ -98,8 +99,8 @@ To project range on window
 def draw_mdb(max_iterations):
 	a_axis = []  # list of points on the real number axis
 	b_axis = []  # list of points on the imaginary number axis
-	step_a = (a_max - a_min) / window_width  # coordinates between each pixel
-	step_b = (b_max - b_min) / window_height  # coordinates between each pixel
+	step_a = (a_max - a_min) / (window_width) # coordinates between each pixel
+	step_b = (b_max - b_min) / (window_height)  # coordinates between each pixel
 	temporary = a_min  # temporary variable to store values of a_min
 	while temporary < a_max:
 		a_axis = a_axis + [temporary]
@@ -217,8 +218,8 @@ try rough zoom in / out
 For the zoom function, it's just a rought one. Also the scale for y-axis is up side down. Thus, this needs to be fixed
 FYI, I'm thinking about the redrawing part. Not sure if it successfully works, prolly I'll debug and see next week
 """
-
 zoom_zoom = 5
+
 def compute_zoom(cen_x,cen_y):
 	global a_min,a_max,b_min,b_max,zoom_zoom
 
@@ -240,7 +241,7 @@ def move_point(event):
 	half_width = (window_width / zoom_zoom) / 5
 	half_height = (window_height / zoom_zoom) / 5
 
-	mandelbrotDisplay.delete(zoom_rect)
+	mandelbrotDisplay.delete("all")
 	zoom_rect = mandelbrotDisplay.create_rectangle(event.x-half_width,event.y - half_height,event.x+half_width,event.y+half_height, width = 1)
 
 def zoom(event):
@@ -251,7 +252,7 @@ def zoom(event):
 	b_min = react[1]
 	a_max = react[2]
 	b_max = react[3]   
-	draw_mdb(get_max_iter())   #let's redraw a fractal 
+	draw_mdb(get_max_iter())   #let's redraw a fractal , but it didn't work :/
 	start() #when zoom, i put it into grey scale so we can see the different/ how it goes wrong        
 zoom_rect = mandelbrotDisplay.create_rectangle(0,0,0,0)
 mandelbrotDisplay.bind('<Button-1>',zoom)
