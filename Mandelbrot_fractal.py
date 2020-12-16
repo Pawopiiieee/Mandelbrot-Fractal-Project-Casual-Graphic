@@ -163,10 +163,9 @@ def get_max_iter():
 	
 	try:
 		max_iterations=int(iteration_entry.get())
-		return max_iterations
 	except:
 		max_iterations = 20
-		return max_iterations
+	return max_iterations
 """
 this function will take the value from drop down box 
 for number of exponent for the Mandelbrot Set (2,3,4,5,10)
@@ -187,12 +186,18 @@ def get_strategy_from_selection(selection):
 		strategy = Strategy_Z2()
 
 
-def print_function(red_indicator,green_indicator, blue_indicator):     #this draws the mandelbrot set.. It is very slow now
+def print_function(red_indicator,green_indicator, blue_indicator):     #this draws the mandelbrot set..
 	global a_min, point_previous
 	mandelbrotDisplay.delete("all")     #removes the previous mandelbrot so you don't draw over it, I think this will make it more stable and will speed it up
+<<<<<<< HEAD
 	
 	x = 0
 	y = 0
+=======
+
+	x = 2
+	y = 3
+>>>>>>> a73e9ca565f00df0f8e4d42e546376eb33555f1d
 	max_iter=get_max_iter()
 	to_draw = draw_mdb(get_max_iter())
 	iteration_list=to_draw[0]
@@ -301,11 +306,10 @@ zoom_rect = mandelbrotDisplay.create_rectangle(0,0,0,0)
 mandelbrotDisplay.bind('<Button-1>',zoom)
 mandelbrotDisplay.bind('<Button-2>',move_point)
 
-def red():		#These change the color in the mandelbrot set. Changing the color takes time, but works
-	clean_start()
-	print("red")
+def red():		#These change the color in the mandelbrot set.
+	clean_start()	#removes the names etc. from the startscreen
+	print("red")	#To know you pushed the button
 	print_function(255,0,0)	#the numbers represent the rgb
-
 
 def yellow():
 	clean_start()
@@ -319,8 +323,13 @@ def purple():
 
 def rainbow():
 	clean_start()
+<<<<<<< HEAD
 	print_function(666,0,0)
 	print("rainboww woww")
+=======
+	print_function(666,0,0) #I put in 666 because we don't need rgb
+	print("rainbow")
+>>>>>>> a73e9ca565f00df0f8e4d42e546376eb33555f1d
 
 def start():            #the start button makes a white mandelbrot (and will make the settings window appear)
 	clean_start()
@@ -329,7 +338,6 @@ def start():            #the start button makes a white mandelbrot (and will mak
 
 def surprised_mdb(): #this surprised Mandelbrot Fractal will take iteration = 20, rainbow color
 	global strategy
-
 	clean_start()
 	strategy = Strategy_Surprised()
 	print_function(666,0,0)
@@ -393,7 +401,6 @@ surprised_label.grid(row = 11, column = 0)
 
 
 '''starting screen'''
-
 title=Label(mandelBrot,text='MANDELBROT FRACTAL PROJECT')
 title.grid(row=0,column=1)
 start_button=Button(mandelBrot,text='start',command=start)
