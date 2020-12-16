@@ -8,8 +8,8 @@ mandelBrot.geometry('400x200')
 mandelBrot.title("The Mandelbrot Fractal with Python")
 
 # window scales can be altered
-window_width = 750  # in pixels
-window_height = 750
+window_width = 650  # in pixels
+window_height = 650
 mandelbrotDisplay = Canvas(mandelBrot, bd=0, height=window_height, width=window_width)
 # Coordinate point. PLEASE DON'T CHANGE, otherwise the little boi will get chubby shape 
 a_min = -2.10  # axis ranges:                                 
@@ -190,8 +190,8 @@ def print_function(red_indicator,green_indicator, blue_indicator):     #this dra
 	global a_min, point_previous
 	mandelbrotDisplay.delete("all")     #removes the previous mandelbrot so you don't draw over it, I think this will make it more stable and will speed it up
 
-	x = 2
-	y = 3
+	x = 0
+	y = 0
 	max_iter=get_max_iter()
 	to_draw = draw_mdb(get_max_iter())
 	iteration_list=to_draw[0]
@@ -317,8 +317,8 @@ def purple():
 
 def rainbow():
 	clean_start()
-	print_function(666,0,0)
-	print("rainboww woww")
+	print_function(666,0,0) #I put in 666 because we don't need rgb
+	print("rainboww")
 
 def start():            #the start button makes a white mandelbrot (and will make the settings window appear)
 	clean_start()
@@ -333,7 +333,7 @@ def surprised_mdb(): #this surprised Mandelbrot Fractal will take iteration = 20
 	print("SURPRISED")
 
 def clean_start():
-	mandelBrot.geometry('750x750')
+	mandelBrot.geometry('650x650')
 	start_button.grid_forget()
 	Dini_Abdullahi.grid_forget()
 	Myrthe_Post.grid_forget()
