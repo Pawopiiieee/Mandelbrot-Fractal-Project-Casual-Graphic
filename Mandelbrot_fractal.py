@@ -8,8 +8,8 @@ mandelBrot.geometry('400x200')
 mandelBrot.title("The Mandelbrot Fractal with Python")
 
 # window scales can be altered
-window_width = 600  # in pixels
-window_height = 600
+window_width = 750  # in pixels
+window_height = 750
 mandelbrotDisplay = Canvas(mandelBrot, bd=0, height=window_height, width=window_width)
 # Coordinate point. PLEASE DON'T CHANGE, otherwise the little boi will get chubby shape 
 a_min = -2.10  # axis ranges:                                 
@@ -48,8 +48,6 @@ Use strategy pattern for the Mandelbrot
 so it could be easier to program the varient calculation/escape part 
 in case we want to add more feature to it
 """
-strategy = None
-
 class MandelbrotStrategy():
 	def mdb_calculation(self,x_mdb,y_mdb,x,y):
 		return (x,y)
@@ -91,7 +89,7 @@ class Strategy_Surprised(MandelbrotStrategy): #when z + z^5 => (x+yi) + (x+yi)^5
 		y = y+pow(y,5)-10*pow(x,2)*pow(y,3)+5*pow(x,4)*y + y_mdb
 		x = equation_x
 		return (x, y) 
-
+strategy = Strategy_Z2()
 """     
 Escape part comes from ||z||^2 = x^2 + y^2 , iterate x*x + y*y  <= 4 or until max_iteration
 starting point at x,y(0,0)
@@ -121,9 +119,6 @@ To project range on window
 """
 def draw_mdb(max_iterations):
 	global strategy
-
-	if strategy == None:
-		strategy = get_strategy_from_selection()
 
 	a_axis = []  # list of points on the real number axis
 	b_axis = []  # list of points on the imaginary number axis
@@ -176,32 +171,32 @@ def get_max_iter():
 this function will take the value from drop down box 
 for number of exponent for the Mandelbrot Set (2,3,4,5,10)
 """
-def get_strategy_from_selection(): 
-
-	selection = variable.get()
+def get_strategy_from_selection(selection): 
+	global strategy
+	#selection = variable.get()
 		
-	if selection == 10:
-		return Strategy_Z10()
-	elif selection == 5:
-		return Strategy_Z5()
-	elif selection == 4:
-		return Strategy_Z4()
-	elif selection == 3:
-		return Strategy_Z3()
+	if selection == str(10):
+		strategy = Strategy_Z10()
+	elif selection == str(5):
+		strategy = Strategy_Z5()
+	elif selection == str(4):
+		strategy = Strategy_Z4()
+	elif selection == str(3):
+		strategy = Strategy_Z3()
 	else:
-		return Strategy_Z2()
+		strategy = Strategy_Z2()
 
 
 def print_function(red_indicator,green_indicator, blue_indicator):     #this draws the mandelbrot set.. It is very slow now
 	global a_min, point_previous
 	mandelbrotDisplay.delete("all")     #removes the previous mandelbrot so you don't draw over it, I think this will make it more stable and will speed it up
 	
-	x = 2
-	y = 3
+	x = 0
+	y = 0
 	max_iter=get_max_iter()
-	todo_rename_later = draw_mdb(get_max_iter())
-	iteration_list=todo_rename_later[0]
-	iter_range=todo_rename_later[1]
+	to_draw = draw_mdb(get_max_iter())
+	iteration_list=to_draw[0]
+	iter_range=to_draw[1]
 	for point in iteration_list:
 		point_current = point[0]  # point on real number
 
@@ -210,7 +205,7 @@ def print_function(red_indicator,green_indicator, blue_indicator):     #this dra
 			numberOfIters = point[2]  # numbers of iterations
 
 		else:  # new line starts
-			x = 3
+			x = 0
 			y += 1
 			numberOfIters = point[2]  # point on imaginary numbers
 		
@@ -326,6 +321,7 @@ def rainbow():
 	clean_start()
 	print_function(666,0,0)
 	print("rainboww woww")
+
 def start():            #the start button makes a white mandelbrot (and will make the settings window appear)
 	clean_start()
 	print_function(255,255,255)
@@ -340,7 +336,7 @@ def surprised_mdb(): #this surprised Mandelbrot Fractal will take iteration = 20
 	print("SURPRISED")
 
 def clean_start():
-	mandelBrot.geometry('600x600')
+	mandelBrot.geometry('750x750')
 	start_button.grid_forget()
 	Dini_Abdullahi.grid_forget()
 	Myrthe_Post.grid_forget()
@@ -383,7 +379,7 @@ zoom_label.grid(row=6,column=0,columnspan=5)
 exp_option = ["2", "3", "4", "5", "10"] 
 variable = IntVar(settings)
 variable.set(exp_option[0])
-menu_option = OptionMenu(settings,variable, *exp_option)
+menu_option = OptionMenu(settings,variable, *exp_option,command=get_strategy_from_selection)
 option_label = Label(settings,text= " Input the Exponent for the Mandelbrot Set")
 option_label.grid(row = 9, column = 0)
 menu_option.grid(row = 9, column = 1)
