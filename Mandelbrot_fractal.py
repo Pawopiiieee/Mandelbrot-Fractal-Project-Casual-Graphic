@@ -189,15 +189,9 @@ def get_strategy_from_selection(selection):
 def print_function(red_indicator,green_indicator, blue_indicator):     #this draws the mandelbrot set..
 	global a_min, point_previous
 	mandelbrotDisplay.delete("all")     #removes the previous mandelbrot so you don't draw over it, I think this will make it more stable and will speed it up
-<<<<<<< HEAD
-	
-	x = 0
-	y = 0
-=======
 
 	x = 2
 	y = 3
->>>>>>> a73e9ca565f00df0f8e4d42e546376eb33555f1d
 	max_iter=get_max_iter()
 	to_draw = draw_mdb(get_max_iter())
 	iteration_list=to_draw[0]
@@ -323,13 +317,8 @@ def purple():
 
 def rainbow():
 	clean_start()
-<<<<<<< HEAD
 	print_function(666,0,0)
 	print("rainboww woww")
-=======
-	print_function(666,0,0) #I put in 666 because we don't need rgb
-	print("rainbow")
->>>>>>> a73e9ca565f00df0f8e4d42e546376eb33555f1d
 
 def start():            #the start button makes a white mandelbrot (and will make the settings window appear)
 	clean_start()
