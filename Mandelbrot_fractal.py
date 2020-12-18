@@ -357,6 +357,14 @@ def surprised_mdb(): #this surprised Mandelbrot Fractal will take iteration = 20
 	print_function(666,0,0)
 	print("SURPRISED")
 
+
+'''
+#beginning of colorpicker, Dini made this, I'll save it here till I work on it						
+def color():
+    clean_start
+    my_color = colorchooser.askcolor()
+    return mandelbrotDisplay.grid(row=1)
+'''
 def clean_start():
 	mandelBrot.geometry('650x650')
 	start_button.grid_forget()
