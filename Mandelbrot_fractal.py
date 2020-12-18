@@ -350,7 +350,7 @@ def start():            #the start button makes a white mandelbrot (and will mak
 	print("white")
 
 def surprised_mdb(): #this surprised Mandelbrot Fractal will take iteration = 20, rainbow color
-	global strategy
+	global strategy, color
 	color='rainbow'
 	clean_start()
 	strategy = Strategy_Surprised()
