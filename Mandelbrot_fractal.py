@@ -187,7 +187,7 @@ def get_strategy_from_selection(selection):
 
 
 def print_function(red_indicator,green_indicator, blue_indicator):     #this draws the mandelbrot set..
-	global a_min, point_previous
+	global a_min, point_previous, color
 	mandelbrotDisplay.delete("all")     #removes the previous mandelbrot so you don't draw over it, I think this will make it more stable and will speed it up
 
 	x = 0
@@ -216,7 +216,7 @@ def print_function(red_indicator,green_indicator, blue_indicator):     #this dra
 #					i=0
 		
 		rainbow=((255,50,50),(255,130,255),(100,100,255),(80,255,80),(255,255,0),(255,170,0))
-		if red_indicator==666:
+		if color=='rainbow':
 			if numberOfIters<max_iter:
 				if numberOfIters<23:
 					red_color =rainbow[numberOfIters%6][0]
@@ -287,7 +287,7 @@ def move_point(event):
 	zoom_rect = mandelbrotDisplay.create_rectangle(event.x-half_width,event.y - half_height,event.x+half_width,event.y+half_height, width = 1)
 
 def zoom(event):
-	global a_max,a_min,b_max,b_min
+	global a_max,a_min,b_max,b_min,color
 
 	react = compute_zoom(event.x,event.y)
 	a_min = react[0]
@@ -295,38 +295,63 @@ def zoom(event):
 	a_max = react[2]
 	b_max = react[3]   
 	draw_mdb(get_max_iter())   #let's redraw a fractal , but it didn't work :/
-	start() #when zoom, i put it into grey scale so we can see the different/ how it goes wrong        
+	if color=='red':
+		red()
+	elif color=='white':
+		start()
+	elif color=='rainbow':
+		rainbow()
+	elif color=='purple':
+		purple()
+	elif color=='yellow':
+		yellow()
+	else:
+		print("Error in zooming and colors")
+
 zoom_rect = mandelbrotDisplay.create_rectangle(0,0,0,0)
 mandelbrotDisplay.bind('<Button-1>',zoom)
 mandelbrotDisplay.bind('<Button-2>',move_point)
 
 def red():		#These change the color in the mandelbrot set.
+	global color
+	color='red'
 	clean_start()	#removes the names etc. from the startscreen
 	print("red")	#To know you pushed the button
 	print_function(255,0,0)	#the numbers represent the rgb
 
 def yellow():
+	global color
+	color='yellow'
 	clean_start()
 	print_function(255,255,0)
 	print("yellow")
 
 def purple():
+	global color
+	color='purple'
 	clean_start()
 	print_function(98,0,58)
 	print("purple")
 
+
 def rainbow():
+	global color
+	color='rainbow'
 	clean_start()
 	print_function(666,0,0) #I put in 666 because we don't need rgb
 	print("rainboww")
 
+
 def start():            #the start button makes a white mandelbrot (and will make the settings window appear)
+	global color
+	color='white'
 	clean_start()
 	print_function(255,255,255)
 	print("white")
 
 def surprised_mdb(): #this surprised Mandelbrot Fractal will take iteration = 20, rainbow color
 	global strategy
+	color='rainbow'
 	clean_start()
 	strategy = Strategy_Surprised()
 	print_function(666,0,0)
@@ -383,9 +408,9 @@ menu_option.grid(row = 9, column = 1)
 
 '''label for surprised fractal''' #Incase a user is curious about the mandelbrot
 surprised_button=Button(settings,bg='#969696',width=15,fg='#003333',text='Surprised Me',activeforeground='#323232',command=surprised_mdb)
-surprised_button.grid(row=11,column=1)
+surprised_button.grid(row=11,column=2)
 surprised_label = Label(settings,text= " Do you want to see the secret surprise? Just click here!")
-surprised_label.grid(row = 11, column = 0)
+surprised_label.grid(row = 11, column = 0,columnspan=2)
 
 
 
