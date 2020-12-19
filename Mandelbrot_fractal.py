@@ -218,14 +218,14 @@ def print_function(red_indicator,green_indicator, blue_indicator):     #this dra
 		rainbow=((255,50,50),(255,130,255),(100,100,255),(80,255,80),(255,255,0),(255,170,0))
 		if color=='rainbow':
 			if numberOfIters<max_iter:
-				if numberOfIters<23:
-					red_color =rainbow[numberOfIters%6][0]
-					green_color =rainbow[numberOfIters%6][1]
-					blue_color =rainbow[numberOfIters%6][2]
-				else:
-					red_color = 0	#to avoid confetti, the middle turns gray/black
-					green_color = 0
-					blue_color = log(numberOfIters, iter_range)*50
+#				if numberOfIters<23:
+				red_color =rainbow[numberOfIters%6][0]
+				green_color =rainbow[numberOfIters%6][1]
+				blue_color =rainbow[numberOfIters%6][2]
+#			else:
+#				red_color = 0	#to avoid confetti, the middle turns gray/black
+#				green_color = 0
+#				blue_color = log(numberOfIters, iter_range)*50
 			else:
 				red_color=0
 				green_color=0
