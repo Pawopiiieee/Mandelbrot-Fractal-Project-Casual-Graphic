@@ -268,20 +268,20 @@ def compute_zoom(cen_x,cen_y):
 	new_width = abs(a_max - a_min) / float(zoom_zoom)
 	new_height = abs(b_max - b_min) / float(zoom_zoom)
 	mouse_x = (cen_x / float(window_width)) * abs(a_max-a_min) + a_min
-	mouse_y = (cen_y / float(window_height)) * abs(b_max-b_min) + b_min #fix it, something wrong with y axis when zoom
+	mouse_y = -((cen_y / float(window_height)) * abs(b_max-b_min) + b_min) #fixed
 
 	zoom_rect = [0,0,0,0]
-	zoom_rect[0] = mouse_x - (new_width / float(5))
-	zoom_rect[1] = mouse_y - (new_height / float(5))
-	zoom_rect[2] = mouse_x + (new_width / float(5))
-	zoom_rect[3] = mouse_y + (new_height / float(5))
+	zoom_rect[0] = mouse_x - (new_width / float(zoom_zoom))
+	zoom_rect[1] = mouse_y - (new_height / float(zoom_zoom))
+	zoom_rect[2] = mouse_x + (new_width / float(zoom_zoom))
+	zoom_rect[3] = mouse_y + (new_height / float(zoom_zoom))
 
 	return zoom_rect
 
 def move_point(event):
 	global mandelbrotDisplay, window_height,window_width,zoom_rect
-	half_width = (window_width / zoom_zoom) / 5
-	half_height = (window_height / zoom_zoom) / 5
+	half_width = (window_width / zoom_zoom) / 3
+	half_height = (window_height / zoom_zoom) / 3
 
 	mandelbrotDisplay.delete("all")
 	zoom_rect = mandelbrotDisplay.create_rectangle(event.x-half_width,event.y - half_height,event.x+half_width,event.y+half_height, width = 1)
