@@ -25,11 +25,11 @@ def mandelbrotSet(x_mdb, y_mdb,z_mdb):
 
 	max_iteration = 20
 
-	def recur_mandelbrot(x,y,z,iteration_count):
+	def recur_mandelbrot(x,y,z,iteration_count): #with Homogeneity approach for projective coordinates
 		equation = pow(x,2) - pow(y,2)  + x_mdb 
-		y = 2*x*y + y_mdb
-		x = equation * 0.5
-		z = 2*x*y + z_mdb
+		y = 2*x*y + 2*y*x + y_mdb
+		z = 2*y*z + z_mdb
+		x = equation
 		if pow(x,2) + pow(y,2) + pow(z,2)<= 4 and iteration_count < max_iteration:
 			return recur_mandelbrot(x,y,z,iteration_count+1)
 		else:
