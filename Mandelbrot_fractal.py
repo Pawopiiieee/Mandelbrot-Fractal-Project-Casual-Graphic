@@ -1,6 +1,7 @@
 from math import *
 from tkinter import *
 import time
+from tkinter import colorchooser
 begin = time.time()
 
 mandelBrot = Tk()
@@ -16,7 +17,10 @@ a_min = -2.10  # axis ranges:
 a_max = 1.15  # a horizontal, real numbers part
 b_min = -1.80  # b vertical, imaginary numbers part
 b_max = 1.7   #We could make the user have a distort button of some sorts if we do wanna mess with it
-
+#some variables for the color
+red_indicator=0
+green_indicator=0
+blue_indicator=0
 """
 3D (Incompleted)
 def mandelbrotSet(x_mdb, y_mdb,z_mdb):
@@ -118,7 +122,7 @@ To project range on window
 
 """
 def draw_mdb(max_iterations):
-	global strategy
+	global strategy,a_min,a_max,b_max,b_min
 
 	a_axis = []  # list of points on the real number axis
 	b_axis = []  # list of points on the imaginary number axis
@@ -184,10 +188,11 @@ def get_strategy_from_selection(selection):
 		strategy = Strategy_Z3()
 	else:
 		strategy = Strategy_Z2()
+i=1
 
-
-def print_function(red_indicator,green_indicator, blue_indicator):     #this draws the mandelbrot set..
-	global a_min, point_previous, color
+def print_function():     #this draws the mandelbrot set..
+	global a_min, point_previous,i,red_indicator,green_indicator,blue_indicator
+	print('ammount of times drawn: {}'.format(i))
 	mandelbrotDisplay.delete("all")     #removes the previous mandelbrot so you don't draw over it, I think this will make it more stable and will speed it up
 
 	x = 0
@@ -208,24 +213,12 @@ def print_function(red_indicator,green_indicator, blue_indicator):     #this dra
 			y += 1
 			numberOfIters = point[2]  # point on imaginary numbers
 		
-#		if color==red:                  gives you checkers
-#			if i>20:
-#				green_indicator=255
-#				if i>40:
-#					green_indicator=0
-#					i=0
-		
 		rainbow=((255,50,50),(255,130,255),(100,100,255),(80,255,80),(255,255,0),(255,170,0))
-		if color=='rainbow':
+		if red_indicator==666:
 			if numberOfIters<max_iter:
-#				if numberOfIters<23:
 				red_color =rainbow[numberOfIters%6][0]
 				green_color =rainbow[numberOfIters%6][1]
 				blue_color =rainbow[numberOfIters%6][2]
-#			else:
-#				red_color = 0	#to avoid confetti, the middle turns gray/black
-#				green_color = 0
-#				blue_color = log(numberOfIters, iter_range)*50
 			else:
 				red_color=0
 				green_color=0
@@ -254,6 +247,7 @@ def print_function(red_indicator,green_indicator, blue_indicator):     #this dra
 		
 	mandelbrotDisplay.grid(row=0, column=0)        #This displays the just made mandelbrot
 	print("Succssfully DONE")
+	i+=1
 
 """
 try rough zoom in / out
@@ -287,31 +281,31 @@ def move_point(event):
 	zoom_rect = mandelbrotDisplay.create_rectangle(event.x-half_width,event.y - half_height,event.x+half_width,event.y+half_height, width = 1)
 
 def zoom(event):
-	global a_max,a_min,b_max,b_min,color
+	global a_max,a_min,b_max,b_min,red_indicator,green_indicator,blue_indicator
 
 	react = compute_zoom(event.x,event.y)
 	a_min = react[0]
 	b_min = react[1]
 	a_max = react[2]
 	b_max = react[3]   
-	draw_mdb(get_max_iter())   #let's redraw a fractal , but it didn't work :/
-	if color=='red':
-		red()
-	elif color=='white':
-		start()
-	elif color=='rainbow':
-		rainbow()
-	elif color=='purple':
-		purple()
-	elif color=='yellow':
-		yellow()
-	else:
-		print("Error in zooming and colors")
+#	draw_mdb(get_max_iter())   #let's redraw a fractal , but it didn't work :/
+	print_function()
+
 
 zoom_rect = mandelbrotDisplay.create_rectangle(0,0,0,0)
 mandelbrotDisplay.bind('<Button-1>',zoom)
 mandelbrotDisplay.bind('<Button-2>',move_point)
 
+def choose_color():
+	global red_indicator,green_indicator,blue_indicator
+	clean_start()
+	color_code = colorchooser.askcolor()
+	print(color_code)
+	red_indicator=color_code[0][0]
+	green_indicator=color_code[0][1]
+	blue_indicator=color_code[0][2]
+	print_function()
+'''
 def red():		#These change the color in the mandelbrot set.
 	global color
 	color='red'
@@ -332,39 +326,33 @@ def purple():
 	clean_start()
 	print_function(98,0,58)
 	print("purple")
-
+'''
 
 def rainbow():
-	global color
-	color='rainbow'
+	global red_indicator
 	clean_start()
-	print_function(666,0,0) #I put in 666 because we don't need rgb
+	red_indicator=666      #I put in 666 because we don't need rgb
+	print_function()
 	print("rainboww")
 
 
 def start():            #the start button makes a white mandelbrot (and will make the settings window appear)
-	global color
-	color='white'
+	global red_indicator,green_indicator,blue_indicator
 	clean_start()
-	print_function(255,255,255)
+	red_indicator=255
+	green_indicator=255
+	blue_indicator=255
+	print_function()
 	print("white")
 
 def surprised_mdb(): #this surprised Mandelbrot Fractal will take iteration = 20, rainbow color
-	global strategy, color
-	color='rainbow'
+	global strategy
 	clean_start()
 	strategy = Strategy_Surprised()
-	print_function(666,0,0)
+	red_indicator=666
+	print_function()
 	print("SURPRISED")
 
-
-'''
-#beginning of colorpicker, Dini made this, I'll save it here till I work on it						
-def color():
-    clean_start
-    my_color = colorchooser.askcolor()
-    return mandelbrotDisplay.grid(row=1)
-'''
 def clean_start():
 	mandelBrot.geometry('650x650')
 	start_button.grid_forget()
@@ -381,7 +369,7 @@ settings.title('Settings')
 '''Color Buttons'''
 color_label=Label(settings,text='Choose a color')
 color_label.grid(row=0,column=0)
-
+'''
 red_button=Button(settings,bg='red',text='RED',fg='red',width=12,command=red,activeforeground='dark red',activebackground='dark red')		    #a red button, starting the function red()
 red_button.grid(row=2,column=1)
 
@@ -390,9 +378,14 @@ yellow_button.grid(row=2,column=0)
 
 purple_button=Button(settings,bg='#62003a',width=12,fg='#62003a',text='PURPLE',activeforeground='#43002d',command=purple,activebackground='#43002d')	#a purple button, starting the function purple()
 purple_button.grid(row=2,column=2)
+'''
 
 rainbow_button=Button(settings,bg='#969696',width=12,fg='#3058d1',text='RAINBOW',activeforeground='#323232',command=rainbow,activebackground='#323232')	#a purple button, starting the function purple()
-rainbow_button.grid(row=3,column=0)
+rainbow_button.grid(row=2,column=1)
+
+'''Button for choosing a color, a colorwindow will pop up'''
+color_chooser_button = Button(settings, text = "Select color",width=12 , command = choose_color) 
+color_chooser_button.grid(row=2, column=0)
 
 '''Entry for iterations'''
 iteration_label1=Label(settings,text='Amount of itterations, Lowering it will increase the speed, but decrease the quality)')
