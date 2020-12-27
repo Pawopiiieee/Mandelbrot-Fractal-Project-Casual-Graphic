@@ -287,8 +287,8 @@ def zoom(event):
 	a_min = react[0]
 	b_min = react[1]
 	a_max = react[2]
-	b_max = react[3]   
-#	draw_mdb(get_max_iter())   #let's redraw a fractal , but it didn't work :/
+	b_max = react[3]
+	draw_mdb(get_max_iter())   #let's redraw a fractal , but it didn't work :/
 	print_function()
 
 
