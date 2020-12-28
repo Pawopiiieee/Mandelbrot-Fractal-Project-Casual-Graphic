@@ -190,11 +190,32 @@ def get_strategy_from_selection(selection):
 		strategy = Strategy_Z2()
 i=1
 
+def color_theme(red_indicator,numberOfIters,max_iter,theme,length_theme):
+	if numberOfIters<max_iter:
+		red_color =theme[numberOfIters%length_theme][0]
+		green_color =theme[numberOfIters%length_theme][1]
+		blue_color =theme[numberOfIters%length_theme][2]
+	else:
+		red_color=0
+		green_color=0
+		blue_color=0
+	return red_color, green_color, blue_color
+
+
 def print_function():     #this draws the mandelbrot set..
 	global a_min, point_previous,i,red_indicator,green_indicator,blue_indicator
 	print('ammount of times drawn: {}'.format(i))
 	mandelbrotDisplay.delete("all")     #removes the previous mandelbrot so you don't draw over it, I think this will make it more stable and will speed it up
-
+	if red_indicator==666:
+		theme=((255,50,50),(255,130,255),(100,100,255),(80,255,80),(255,255,0),(255,170,0))
+	elif red_indicator==6666:
+		theme=((155,79,150),(0,56,168),(212,20,110))
+	elif red_indicator==66666:
+		theme=((165,0,98),(214,41,0),(255,155,85),(255,255,255),(212,97,166),(165,0,98))
+	try:
+		len_theme=len(theme)
+	except:
+		len_theme=None
 	x = 0
 	y = 0
 	max_iter=get_max_iter()
@@ -213,16 +234,9 @@ def print_function():     #this draws the mandelbrot set..
 			y += 1
 			numberOfIters = point[2]  # point on imaginary numbers
 		
-		rainbow=((255,50,50),(255,130,255),(100,100,255),(80,255,80),(255,255,0),(255,170,0))
-		if red_indicator==666:
-			if numberOfIters<max_iter:
-				red_color =rainbow[numberOfIters%6][0]
-				green_color =rainbow[numberOfIters%6][1]
-				blue_color =rainbow[numberOfIters%6][2]
-			else:
-				red_color=0
-				green_color=0
-				blue_color=0
+
+		if red_indicator>255:
+			red_color, green_color, blue_color = color_theme(red_indicator,numberOfIters,max_iter,theme,len_theme)
 		else:
 			red_color=log(numberOfIters, iter_range)*red_indicator
 			green_color=log(numberOfIters, iter_range)*green_indicator
@@ -335,6 +349,19 @@ def rainbow():
 	print_function()
 	print("rainboww")
 
+def blue_pink():
+	global red_indicator
+	clean_start()
+	red_indicator=6666      #I put in 6666 because we don't need rgb
+	print_function()
+	print("Blue/Pink")
+
+def orange_purple():
+	global red_indicator
+	clean_start()
+	red_indicator=66666      #I put in 66666 because we don't need rgb
+	print_function()
+	print("Orange_Purple")
 
 def start():            #the start button makes a white mandelbrot (and will make the settings window appear)
 	global red_indicator,green_indicator,blue_indicator
@@ -382,6 +409,12 @@ purple_button.grid(row=2,column=2)
 
 rainbow_button=Button(settings,bg='#969696',width=12,fg='#3058d1',text='RAINBOW',activeforeground='#323232',command=rainbow,activebackground='#323232')	#a purple button, starting the function purple()
 rainbow_button.grid(row=2,column=1)
+
+blue_pink_button=Button(settings, bg='#990099',width=12,text='Blue/Pink',command=blue_pink)
+blue_pink_button.grid(row=2,column=2)
+
+orange_purple_button=Button(settings, bg='#A50062',width=12,text='Orange/Purple',command=orange_purple)
+orange_purple_button.grid(row=2,column=3)
 
 '''Button for choosing a color, a colorwindow will pop up'''
 color_chooser_button = Button(settings, text = "Select color",width=12 , command = choose_color) 
