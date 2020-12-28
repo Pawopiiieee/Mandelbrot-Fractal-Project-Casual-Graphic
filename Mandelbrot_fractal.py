@@ -2,6 +2,7 @@ from math import *
 from tkinter import *
 import time
 from tkinter import colorchooser
+import math
 begin = time.time()
 
 mandelBrot = Tk()
@@ -21,6 +22,7 @@ b_max = 1.7   #We could make the user have a distort button of some sorts if we 
 red_indicator=0
 green_indicator=0
 blue_indicator=0
+rotation = False
 """
 3D (Incompleted)
 def mandelbrotSet(x_mdb, y_mdb,z_mdb):
@@ -203,7 +205,7 @@ def color_theme(red_indicator,numberOfIters,max_iter,theme,length_theme):
 
 
 def print_function():     #this draws the mandelbrot set..
-	global a_min, point_previous,i,red_indicator,green_indicator,blue_indicator
+	global a_min, point_previous,i,red_indicator,green_indicator,blue_indicator, rotation
 	print('ammount of times drawn: {}'.format(i))
 	mandelbrotDisplay.delete("all")     #removes the previous mandelbrot so you don't draw over it, I think this will make it more stable and will speed it up
 	if red_indicator==666:
@@ -255,7 +257,31 @@ def print_function():     #this draws the mandelbrot set..
 		if blue_color>255:
 			blue_color=255
 		tk_rgb = "#%02x%02x%02x" % (red_color, green_color, blue_color)
+		if rotation == True:
+			color = log(numberOfIters, iter_range) * 255 		
+			color = int(color)
+			if color > 255 :
+				color = 25
+			tk_rgb = "#%02x%02x%02x" % (15, 15 , color)
 
+			def rotate(x,y, degree,window_width,window_height):
+				degree = math.radians(degree)
+				cos_v = math.cos(degree)
+				sin_v = math.sin(degree)
+				cen_x = window_width
+				cen_y = window_height
+				new_points = []
+				x -= cen_x #rotation point
+				y -= cen_y #rotation point
+				x_new = x * cos_v - y * sin_v
+				y_new = x * sin_v + y * cos_v
+				new_points.append([x_new + cen_x, y_new + cen_y,x_new + cen_x, y_new + cen_y])
+				return new_points
+		
+			if color != 0:
+				for i in range (0,10,2):	
+					new_mdb = rotate(x,y,i, window_width,window_height)
+					mandelbrotDisplay.create_rectangle(new_mdb, fill=tk_rgb, outline="yellow", width=0)
 		mandelbrotDisplay.create_rectangle(point_plot, fill=tk_rgb, outline="yellow", width=0)
 
 		
@@ -268,7 +294,7 @@ try rough zoom in / out
 For the zoom function, it's just a rought one. Also the scale for y-axis is up side down. Thus, this needs to be fixed
 FYI, I'm thinking about the redrawing part. Not sure if it successfully works, prolly I'll debug and see next week
 """
-zoom_zoom = 5
+zoom_zoom = 3
 
 def compute_zoom(cen_x,cen_y):
 	global a_min,a_max,b_min,b_max,zoom_zoom
@@ -373,12 +399,20 @@ def start():            #the start button makes a white mandelbrot (and will mak
 	print("white")
 
 def surprised_mdb(): #this surprised Mandelbrot Fractal will take iteration = 20, rainbow color
-	global strategy
+	global strategy, red_indicator
 	clean_start()
 	strategy = Strategy_Surprised()
 	red_indicator=666
 	print_function()
 	print("SURPRISED")
+
+def rotation(): #this surprised Mandelbrot Fractal will take iteration = 20, rainbow color
+	global strategy,red_indicator,green_indicator,blue_indicator,rotation
+	clean_start()
+	rotation = True
+	strategy = Strategy_Z2()
+	print_function()
+	print("Layers")
 
 def clean_start():
 	mandelBrot.geometry('650x650')
@@ -446,7 +480,11 @@ surprised_button.grid(row=11,column=2)
 surprised_label = Label(settings,text= " Do you want to see the secret surprise? Just click here!")
 surprised_label.grid(row = 11, column = 0,columnspan=2)
 
-
+'''label for Layers/3D''' #try 3D by rotation 
+layer_button=Button(settings,bg='#969696',width=15,fg='#003333',text='Layers',activeforeground='#323232', command=rotation)
+layer_button.grid(row=13,column=2)
+layer_label = Label(settings,text= " An attemp to make 3D by adding layers. Just click here!")
+layer_label.grid(row = 13, column = 0,columnspan=2)
 
 '''starting screen'''
 title=Label(mandelBrot,text='MANDELBROT FRACTAL PROJECT')
