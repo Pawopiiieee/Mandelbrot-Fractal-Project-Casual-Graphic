@@ -471,8 +471,8 @@ variable = IntVar(settings)
 variable.set(exp_option[0])
 menu_option = OptionMenu(settings,variable, *exp_option,command=get_strategy_from_selection)
 option_label = Label(settings,text= " Input the Exponent for the Mandelbrot Set")
-option_label.grid(row = 9, column = 0)
-menu_option.grid(row = 9, column = 1)
+option_label.grid(row = 9, column = 0, columnspan=2)
+menu_option.grid(row = 9, column = 2)
 
 '''label for surprised fractal''' #Incase a user is curious about the mandelbrot
 surprised_button=Button(settings,bg='#969696',width=15,fg='#003333',text='Surprised Me',activeforeground='#323232',command=surprised_mdb)
