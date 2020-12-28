@@ -204,9 +204,9 @@ def color_theme(red_indicator,numberOfIters,max_iter,theme,length_theme):
 	return red_color, green_color, blue_color
 
 
-def print_function():     #this draws the mandelbrot set..
+def print_function():     #this draws the mandelbrot set.. + mapping color for each pixel
 	global a_min, point_previous,i,red_indicator,green_indicator,blue_indicator, rotation
-	print('ammount of times drawn: {}'.format(i))
+	print('amount of times drawn: {}'.format(i))
 	mandelbrotDisplay.delete("all")     #removes the previous mandelbrot so you don't draw over it, I think this will make it more stable and will speed it up
 	if red_indicator==666:
 		theme=((255,50,50),(255,130,255),(100,100,255),(80,255,80),(255,255,0),(255,170,0))
@@ -257,12 +257,16 @@ def print_function():     #this draws the mandelbrot set..
 		if blue_color>255:
 			blue_color=255
 		tk_rgb = "#%02x%02x%02x" % (red_color, green_color, blue_color)
+		
+		"""
+		To make layers by every 2 degree rotation, otherwise just make 1 layer MDB 
+		"""
 		if rotation == True:
 			color = log(numberOfIters, iter_range) * 255 		
 			color = int(color)
 			if color > 255 :
 				color = 25
-			tk_rgb = "#%02x%02x%02x" % (15, 15 , color)
+			tk_rgb = "#%02x%02x%02x" % (0, 15 , color)
 
 			def rotate(x,y, degree,window_width,window_height):
 				degree = math.radians(degree)
@@ -273,18 +277,18 @@ def print_function():     #this draws the mandelbrot set..
 				new_points = []
 				x -= cen_x #rotation point
 				y -= cen_y #rotation point
-				x_new = x * cos_v - y * sin_v
+				x_new = x * cos_v - y * sin_v #this can be varied. Now it's based on y-axis. We can change to a-xis if neccessary.
 				y_new = x * sin_v + y * cos_v
 				new_points.append([x_new + cen_x, y_new + cen_y,x_new + cen_x, y_new + cen_y])
 				return new_points
 		
 			if color != 0:
-				for i in range (0,10,2):	
+				for i in range (0,12,2):	#rotate every 2 degrees started from 0.
 					new_mdb = rotate(x,y,i, window_width,window_height)
 					mandelbrotDisplay.create_rectangle(new_mdb, fill=tk_rgb, outline="yellow", width=0)
-		mandelbrotDisplay.create_rectangle(point_plot, fill=tk_rgb, outline="yellow", width=0)
+		else:
+			mandelbrotDisplay.create_rectangle(point_plot, fill=tk_rgb, outline="yellow", width=0) #draw the Mandelbrot without rotation
 
-		
 	mandelbrotDisplay.grid(row=0, column=0)        #This displays the just made mandelbrot
 	print("Succssfully DONE")
 	i+=1
@@ -328,7 +332,7 @@ def zoom(event):
 	b_min = react[1]
 	a_max = react[2]
 	b_max = react[3]
-	draw_mdb(get_max_iter())   #let's redraw a fractal , but it didn't work :/
+	draw_mdb(get_max_iter())   #let's redraw a fractal , but it didn't work well.
 	print_function()
 
 
@@ -373,7 +377,7 @@ def rainbow():
 	clean_start()
 	red_indicator=666      #I put in 666 because we don't need rgb
 	print_function()
-	print("rainboww")
+	print("Rainboww")
 
 def blue_pink():
 	global red_indicator
@@ -396,7 +400,7 @@ def start():            #the start button makes a white mandelbrot (and will mak
 	green_indicator=255
 	blue_indicator=255
 	print_function()
-	print("white")
+	print("White")
 
 def surprised_mdb(): #this surprised Mandelbrot Fractal will take iteration = 20, rainbow color
 	global strategy, red_indicator
