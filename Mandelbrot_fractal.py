@@ -204,7 +204,7 @@ def color_theme(red_indicator,numberOfIters,max_iter,theme,length_theme):
 	return red_color, green_color, blue_color
 
 
-def print_function():     #this draws the mandelbrot set.. + mapping color for each pixel
+def print_function():     #this draws the mandelbrot set.. and mapping color for each pixel
 	global a_min, point_previous,i,red_indicator,green_indicator,blue_indicator, rotation
 	print('amount of times drawn: {}'.format(i))
 	mandelbrotDisplay.delete("all")     #removes the previous mandelbrot so you don't draw over it, I think this will make it more stable and will speed it up
