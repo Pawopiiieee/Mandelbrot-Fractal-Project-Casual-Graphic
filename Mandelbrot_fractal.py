@@ -1,3 +1,4 @@
+from tkinter import font
 from math import *
 from tkinter import *
 import time
@@ -6,8 +7,8 @@ import math
 begin = time.time()
 mandelBrot = Tk()
 mandelBrot.geometry('400x200')
-mandelBrot.title("The Mandelbrot Fractal with Python")
-mandelBrot.configure(background='yellow')
+mandelBrot.title("The Mandelbrot Fractal with Python",  )
+mandelBrot.configure(background='yellow', )
 # window scales can be altered
 window_width = 650  # in pixels
 window_height = 650
@@ -21,7 +22,7 @@ b_max = 1.7   #We could make the user have a distort button of some sorts if we 
 red_indicator=0
 green_indicator=0
 blue_indicator=0
-rotation = False
+rotation = bool(False)
 """
 3D (Incompleted)
 def mandelbrotSet(x_mdb, y_mdb,z_mdb):
@@ -425,22 +426,32 @@ layer_label.grid(row = 13, column = 0,columnspan=2)
 '''starting screen'''
 title=Label(mandelBrot,text='MANDELBROT FRACTAL PROJECT', bg  = 'yellow')
 title.grid(row=0,column=1)
-start_button=Button(mandelBrot,text='start',command=start, bg = 'yellow')
-start_button.grid(row=1,column=1)
+title.configure(font="Verdana 8 underline")
+start_button=Button(mandelBrot,text='start',command=start, bg = 'yellow', height = 2, width = 15, )
+start_Label = Label(mandelBrot, text = " Start the mandelbrot:", bg = 'yellow',  justify = CENTER)
+
+start_Label.grid(row = 3, column = 1, )
+start_button.grid(row=5,column=1, sticky = NS)
+
 created_by=Label(mandelBrot,text='Created by:', bg = 'yellow')
 created_by.grid(row=2,column=0)
 
 
 
 
-Dini_Abdullahi=Label(mandelBrot,text='Dini Abdullahi ME2',fg='blue', bg = 'yellow')
+
+Dini_Abdullahi=Label(mandelBrot,text='Dini Abdullahi ME1',fg='blue', bg = 'yellow',)
 Dini_Abdullahi.grid(row=3,column=0)
+Dini_Abdullahi.configure(font="Verdana 8 underline")
 Myrthe_Post=Label(mandelBrot,text='Myrthe Post ME1',fg='blue',bg = 'yellow')
 Myrthe_Post.grid(row=4,column=0)
+Myrthe_Post.configure(font="Verdana 8 underline")
 Paworapas_Kakhai=Label(mandelBrot,text='Paworapas Kakhai ME1',fg='blue',bg = 'yellow')
 Paworapas_Kakhai.grid(row=5,column=0)
+Paworapas_Kakhai.configure(font="Verdana 8 underline")
 Robin_Tollenaar=Label(mandelBrot,text='Robin Tollenaar ME1',fg='blue',bg = 'yellow')
 Robin_Tollenaar.grid(row=6,column=0)
+Robin_Tollenaar.configure(font="Verdana 8 underline")
 end_time = time.time()
 print("Test the Mandelbrot with Python")
 total = end_time - begin
