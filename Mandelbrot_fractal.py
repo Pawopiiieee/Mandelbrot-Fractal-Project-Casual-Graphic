@@ -22,7 +22,8 @@ b_max = 1.7   #We could make the user have a distort button of some sorts if we 
 red_indicator=0
 green_indicator=0
 blue_indicator=0
-rotation = bool(False)
+rotation = False
+
 """
 3D (Incompleted)
 def mandelbrotSet(x_mdb, y_mdb,z_mdb):
@@ -106,9 +107,11 @@ def mandelbrotSet(x_mdb, y_mdb,max_iterations, strategy):
 			return iteration_count 
 	mandelbrot_value = recur_mandelbrot(0,0,0) #the intial values for x,y,iteration_count = 0
 	return mandelbrot_value
+
 """
-To project range on window
+To project range on window (aka. plot each pixel)
 """
+
 def draw_mdb(max_iterations):
 	global strategy,a_min,a_max,b_max,b_min
 	a_axis = []  # list of points on the real number axis
@@ -156,8 +159,6 @@ for number of exponent for the Mandelbrot Set (2,3,4,5,10)
 """
 def get_strategy_from_selection(selection): 
 	global strategy
-	#selection = variable.get()
-		
 	if selection == str(10):
 		strategy = Strategy_Z10()
 	elif selection == str(5):
@@ -179,6 +180,7 @@ def color_theme(red_indicator,numberOfIters,max_iter,theme,length_theme):
 		green_color=0
 		blue_color=0
 	return red_color, green_color, blue_color
+
 def print_function():     #this draws the mandelbrot set..
 	global a_min, point_previous,i,red_indicator,green_indicator,blue_indicator, rotation
 	print('ammount of times drawn: {}'.format(i))
@@ -227,6 +229,13 @@ def print_function():     #this draws the mandelbrot set..
 		if blue_color>255:
 			blue_color=255
 		tk_rgb = "#%02x%02x%02x" % (red_color, green_color, blue_color)
+
+		"""
+		rotate the mandelbrot to make layer. This part can be manipulated for x or y axis rotation.
+		But I'll leave it for further development due to limited resources. Plus, to be able to look 
+		into 3D layer we need extra code for making camera, more vector calculation (//linear algebra)
+		"""
+
 		if rotation == True:
 			color = log(numberOfIters, iter_range) * 255 		
 			color = int(color)
@@ -251,11 +260,13 @@ def print_function():     #this draws the mandelbrot set..
 				for i in range (0,10,2):	
 					new_mdb = rotate(x,y,i, window_width,window_height)
 					mandelbrotDisplay.create_rectangle(new_mdb, fill=tk_rgb, outline="yellow", width=0)
-		mandelbrotDisplay.create_rectangle(point_plot, fill=tk_rgb, outline="yellow", width=0)
+		else:
+			mandelbrotDisplay.create_rectangle(point_plot, fill=tk_rgb, outline="yellow", width=0)
 		
 	mandelbrotDisplay.grid(row=0, column=0)        #This displays the just made mandelbrot
 	print("Succssfully DONE")
 	i+=1
+	
 """
 try rough zoom in / out
 For the zoom function, it's just a rought one. Also the scale for y-axis is up side down. Thus, this needs to be fixed
@@ -287,7 +298,7 @@ def zoom(event):
 	b_min = react[1]
 	a_max = react[2]
 	b_max = react[3]
-	draw_mdb(get_max_iter())   #let's redraw a fractal , but it didn't work :/
+	draw_mdb(get_max_iter())   #let's redraw a fractal , but it didn't work well. 
 	print_function()
 zoom_rect = mandelbrotDisplay.create_rectangle(0,0,0,0)
 mandelbrotDisplay.bind('<Button-1>',zoom)
@@ -327,18 +338,21 @@ def rainbow():
 	red_indicator=666      #I put in 666 because we don't need rgb
 	print_function()
 	print("rainboww")
+
 def blue_pink():
 	global red_indicator
 	clean_start()
 	red_indicator=6666      #I put in 6666 because we don't need rgb
 	print_function()
 	print("Blue/Pink")
+
 def orange_purple():
 	global red_indicator
 	clean_start()
 	red_indicator=66666      #I put in 66666 because we don't need rgb
 	print_function()
 	print("Orange_Purple")
+
 def start():            #the start button makes a white mandelbrot (and will make the settings window appear)
 	global red_indicator,green_indicator,blue_indicator
 	clean_start()
@@ -347,6 +361,7 @@ def start():            #the start button makes a white mandelbrot (and will mak
 	blue_indicator=255
 	print_function()
 	print("white")
+
 def surprised_mdb(): #this surprised Mandelbrot Fractal will take iteration = 20, rainbow color
 	global strategy, red_indicator
 	clean_start()
@@ -354,13 +369,15 @@ def surprised_mdb(): #this surprised Mandelbrot Fractal will take iteration = 20
 	red_indicator=666
 	print_function()
 	print("SURPRISED")
-def rotation(): #this surprised Mandelbrot Fractal will take iteration = 20, rainbow color
-	global strategy,red_indicator,green_indicator,blue_indicator,rotation
+
+def rotation(): #this rotation Mandelbrot Fractal will take iteration = 20 as defult, but it can be altered.
+	global strategy,rotation
 	clean_start()
 	rotation = True
 	strategy = Strategy_Z2()
 	print_function()
 	print("Layers")
+
 def clean_start():
 	mandelBrot.geometry('650x650')
 	start_button.grid_forget()
@@ -370,6 +387,7 @@ def clean_start():
 	Robin_Tollenaar.grid_forget()
 	created_by.grid_forget()
 	title.grid_forget()
+
 settings=Tk()		#new window for the user to choose different settings like color
 settings.title('Settings')
 settings.configure(background='yellow')
@@ -435,9 +453,6 @@ start_button.grid(row=5,column=1, sticky = NS)
 
 created_by=Label(mandelBrot,text='Created by:', bg = 'yellow')
 created_by.grid(row=2,column=0)
-
-
-
 
 
 Dini_Abdullahi=Label(mandelBrot,text='Dini Abdullahi ME1',fg='blue', bg = 'yellow',)
