@@ -13,7 +13,7 @@ mandelBrot = Tk()
 mandelBrot.geometry('400x200')
 mandelBrot.title("The Mandelbrot Fractal with Python")
 mandelBrot.configure(background='yellow')
-# window scales can be altered
+#window scales can be altered
 window_width = 650  # in pixels
 window_height = 650
 mandelbrotDisplay = Canvas(mandelBrot, bd=0, height=window_height, width=window_width)
@@ -228,6 +228,7 @@ def print_function():
 	to_draw = draw_mdb(get_max_iter())
 	iteration_list=to_draw[0]
 	iter_range=to_draw[1]
+
 	for point in iteration_list:	#here starts the drawing of the brot, it draws every pixel one by one
 		point_current = point[0]  # point on real number
 		if point_current >= point_previous:
@@ -236,7 +237,7 @@ def print_function():
 		else:  # new line starts
 			x = 0
 			y += 1
-			numberOfIters = point[2]  # point on imaginary numbers
+			numberOfIters = point[2]
 		
 		if type(red_indicator)==str:	#if red indicator is a string, than a theme must be used
 			red_color, green_color, blue_color = color_theme(red_indicator,numberOfIters,max_iter,theme,len_theme)
@@ -262,13 +263,12 @@ def print_function():
 		But I'll leave it for further development due to limited resources. Plus, to be able to look 
 		into 3D layer we need extra code for making camera, more vector calculation (//linear algebra)
 		"""
-
 		if rotation == True:
 			color = log(numberOfIters, iter_range) * 255 		
 			color = int(color)
 			if color > 255 :
-				color = 25
-			tk_rgb = "#%02x%02x%02x" % (15, 15 , color)
+				color = 20
+			tk_rgb = "#%02x%02x%02x" % (0, 15 , color)
 			def rotate(x,y, degree,window_width,window_height):
 				degree = math.radians(degree)
 				cos_v = math.cos(degree)
@@ -290,15 +290,13 @@ def print_function():
 		else:
 			mandelbrotDisplay.create_rectangle(point_plot, fill=tk_rgb, outline="yellow", width=0)	#creating a pixel that is filled with the correct color
 		
-	if i==1:
+	#if i == 1:
 		mandelbrotDisplay.grid(row=0, column=0)        #This displays the just made mandelbrot
 	print("Succssfully DONE")
 	i+=1
 	
 """
-try rough zoom in / out
-For the zoom function, it's just a rought one. Also the scale for y-axis is up side down. Thus, this needs to be fixed
-FYI, I'm thinking about the redrawing part. Not sure if it successfully works, prolly I'll debug and see next week
+Shallow zoom in / out
 """
 zoom_zoom = 3
 def compute_zoom(cen_x,cen_y):
@@ -315,8 +313,8 @@ def compute_zoom(cen_x,cen_y):
 	return zoom_rect
 def move_point(event):
 	global mandelbrotDisplay, window_height,window_width,zoom_rect
-	half_width = (window_width / zoom_zoom) / 3
-	half_height = (window_height / zoom_zoom) / 3
+	half_width = (window_width / zoom_zoom) / 2
+	half_height = (window_height / zoom_zoom) /2
 	mandelbrotDisplay.delete("all")
 	zoom_rect = mandelbrotDisplay.create_rectangle(event.x-half_width,event.y - half_height,event.x+half_width,event.y+half_height, width = 1)
 def zoom(event):
@@ -378,7 +376,7 @@ def start():            #the start button makes a white mandelbrot (and will mak
 def surprised_mdb(): #this surprised Mandelbrot Fractal will take iteration = 20, rainbow color
 	global strategy, red_indicator
 	strategy = Strategy_Surprised()
-	red_indicator=666
+	red_indicator='rainbow'
 	print("SURPRISED")
 	print_function()
 
