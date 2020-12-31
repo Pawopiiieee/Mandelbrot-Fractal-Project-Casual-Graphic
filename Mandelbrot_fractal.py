@@ -1,14 +1,18 @@
+''' IMPORTING TKINTER,MATH AND TIME '''
 from tkinter import font
 from math import *
 from tkinter import *
 import time
 from tkinter import colorchooser
 import math
+
 begin = time.time()
+
+'''BASIC TKINTER CODE TO CRATE THE WINDOWS'''
 mandelBrot = Tk()
 mandelBrot.geometry('400x200')
-mandelBrot.title("The Mandelbrot Fractal with Python",  )
-mandelBrot.configure(background='yellow', )
+mandelBrot.title("The Mandelbrot Fractal with Python")
+mandelBrot.configure(background='yellow')
 # window scales can be altered
 window_width = 650  # in pixels
 window_height = 650
@@ -18,12 +22,17 @@ a_min = -2.10  # axis ranges:
 a_max = 1.15  # a horizontal, real numbers part
 b_min = -1.80  # b vertical, imaginary numbers part
 b_max = 1.7   #We could make the user have a distort button of some sorts if we do wanna mess with it
+
 #some variables for the color
 red_indicator=0
 green_indicator=0
 blue_indicator=0
+
 rotation = False
 
+settings=Tk()		#new window for the user to choose different settings like color
+settings.title('Settings')
+settings.configure(background='yellow')
 """
 3D (Incompleted)
 def mandelbrotSet(x_mdb, y_mdb,z_mdb):
@@ -146,11 +155,12 @@ def draw_mdb(max_iterations):
 # Draw picture.
 point_previous = a_min  # To keep track of the end of a pixel line in the window
 point_current = 0
+
+'''getting the max ammount of itterations so we know how many itterations to draw'''
 def get_max_iter():
-	
 	try:
-		max_iterations=int(iteration_entry.get())
-	except:
+		max_iterations=int(iteration_entry.get()) #this gets the text given in the iteration entry. 
+	except:                                       #If none is given or the text is not an ineger, the max iterations becomes 20
 		max_iterations = 20
 	return max_iterations
 """
@@ -159,7 +169,7 @@ for number of exponent for the Mandelbrot Set (2,3,4,5,10)
 """
 def get_strategy_from_selection(selection): 
 	global strategy
-	if selection == str(10):
+	if selection == str(10):       #selection is the number picked by the user
 		strategy = Strategy_Z10()
 	elif selection == str(5):
 		strategy = Strategy_Z5()
@@ -169,66 +179,83 @@ def get_strategy_from_selection(selection):
 		strategy = Strategy_Z3()
 	else:
 		strategy = Strategy_Z2()
-i=1
+
+'''This code can use themes. Here isn't one color chosen. A tuple is filled with colors that matches the colors of the theme.'''
 def color_theme(red_indicator,numberOfIters,max_iter,theme,length_theme):
 	if numberOfIters<max_iter:
-		red_color =theme[numberOfIters%length_theme][0]
-		green_color =theme[numberOfIters%length_theme][1]
+		red_color =theme[numberOfIters%length_theme][0]		#Here the color is assigned. Every iteration has it's own color.
+		green_color =theme[numberOfIters%length_theme][1]	#using modulo, the iterations will keep getting colors, going through the tuple
 		blue_color =theme[numberOfIters%length_theme][2]
-	else:
+	else:													#the last iteration will be black, because that is just cooler
 		red_color=0
 		green_color=0
 		blue_color=0
 	return red_color, green_color, blue_color
 
-def print_function():     #this draws the mandelbrot set..
+'''clean_start will remove all the text and buttons from the main window.'''
+def clean_start():
+	mandelBrot.geometry('650x650')	#rescaling the window so the drawing of the mandelbrot will fit
+	start_button.grid_forget()		#removing the start button
+	Dini_Abdullahi.grid_forget()	#removing the text labels
+	Myrthe_Post.grid_forget()
+	Paworapas_Kakhai.grid_forget()
+	Robin_Tollenaar.grid_forget()
+	created_by.grid_forget()
+	title.grid_forget()
+
+i=1 # a variable to keep count of the ammount of times that the program has drawn
+
+'''This is the main function drawing the mandelbrot'''
+
+def print_function():
 	global a_min, point_previous,i,red_indicator,green_indicator,blue_indicator, rotation
-	print('ammount of times drawn: {}'.format(i))
-	mandelbrotDisplay.delete("all")     #removes the previous mandelbrot so you don't draw over it, I think this will make it more stable and will speed it up
-	if red_indicator==666:
-		theme=((255,50,50),(255,130,255),(100,100,255),(80,255,80),(255,255,0),(255,170,0))
-	elif red_indicator==6666:
-		theme=((155,79,150),(0,56,168),(212,20,110))
-	elif red_indicator==66666:
-		theme=((165,0,98),(214,41,0),(255,155,85),(255,255,255),(212,97,166),(165,0,98))
-	try:
+	print('ammount of times drawn: {}'.format(i))	#To keep up/check the ammount of times drawn, making it easier to check if zoom if working
+	if i==1:
+		clean_start() #cleaning up the starting screen, but only the first time
+	else:
+		mandelbrotDisplay.delete("all")     #removes the previous mandelbrot so you don't draw over it
+	if type(red_indicator)==str:			#if red_indicator is used as a variable for the themes, it is a string
+		if red_indicator=='rainbow':
+			theme=((255,50,50),(255,130,255),(100,100,255),(80,255,80),(255,255,0),(255,170,0))	#these are tuples filled with tuples containing rgb
+		elif red_indicator=='blue_pink':														#every pair of 3 is one color
+			theme=((155,79,150),(0,56,168),(212,20,110))										#these colors are the colors used in the themes
+		elif red_indicator=='orange_purple':
+			theme=((165,0,98),(214,41,0),(255,155,85),(255,255,255),(212,97,166),(165,0,98))
 		len_theme=len(theme)
-	except:
-		len_theme=None
 	x = 0
 	y = 0
 	max_iter=get_max_iter()
 	to_draw = draw_mdb(get_max_iter())
 	iteration_list=to_draw[0]
 	iter_range=to_draw[1]
-	for point in iteration_list:
+	for point in iteration_list:	#here starts the drawing of the brot, it draws every pixel one by one
 		point_current = point[0]  # point on real number
 		if point_current >= point_previous:
 			x += 1
-			numberOfIters = point[2]  # numbers of iterations
+			numberOfIters = point[2]  # number of iterations
 		else:  # new line starts
 			x = 0
 			y += 1
 			numberOfIters = point[2]  # point on imaginary numbers
 		
-		if red_indicator>255:
+		if type(red_indicator)==str:	#if red indicator is a string, than a theme must be used
 			red_color, green_color, blue_color = color_theme(red_indicator,numberOfIters,max_iter,theme,len_theme)
 		else:
-			red_color=log(numberOfIters, iter_range)*red_indicator
-			green_color=log(numberOfIters, iter_range)*green_indicator
-			blue_color=log(numberOfIters, iter_range)*blue_indicator
+			red_color=log(numberOfIters, iter_range)*red_indicator			#if a single color is choosen, the fist few iterations will be dark
+			green_color=log(numberOfIters, iter_range)*green_indicator		#this is because the colors get a low value.the higher the iteration, the brighter the color
+			blue_color=log(numberOfIters, iter_range)*blue_indicator		#the difference in darkness is smaller with a bigger max iterations
 		point_previous = point_current
 		point_plot = [x, y, x, y]  # 2D mandelbrot
-		red_color = int(red_color)
+		red_color = int(red_color)		#instead of using floats
 		green_color=int(green_color)
 		blue_color=int(blue_color)
-		if red_color>255:
-			red_color=255
+		if red_color>255:		#making sure the code doesn't die if somehow the colors get a higher value than the max of 255
+			red_color=255		#this code may be useless, look into if it can be removed, that would speed up the code
 		if green_color>255:
 			green_color=255
 		if blue_color>255:
 			blue_color=255
-		tk_rgb = "#%02x%02x%02x" % (red_color, green_color, blue_color)
+		tk_rgb = "#%02x%02x%02x" % (red_color, green_color, blue_color)		#turning the rgb into hex
 
 		"""
 		rotate the mandelbrot to make layer. This part can be manipulated for x or y axis rotation.
@@ -261,9 +288,10 @@ def print_function():     #this draws the mandelbrot set..
 					new_mdb = rotate(x,y,i, window_width,window_height)
 					mandelbrotDisplay.create_rectangle(new_mdb, fill=tk_rgb, outline="yellow", width=0)
 		else:
-			mandelbrotDisplay.create_rectangle(point_plot, fill=tk_rgb, outline="yellow", width=0)
+			mandelbrotDisplay.create_rectangle(point_plot, fill=tk_rgb, outline="yellow", width=0)	#creating a pixel that is filled with the correct color
 		
-	mandelbrotDisplay.grid(row=0, column=0)        #This displays the just made mandelbrot
+	if i==1:
+		mandelbrotDisplay.grid(row=0, column=0)        #This displays the just made mandelbrot
 	print("Succssfully DONE")
 	i+=1
 	
@@ -303,94 +331,70 @@ def zoom(event):
 zoom_rect = mandelbrotDisplay.create_rectangle(0,0,0,0)
 mandelbrotDisplay.bind('<Button-1>',zoom)
 mandelbrotDisplay.bind('<Button-2>',move_point)
+
+'''
+COLOR FUNCTIONS
+
+Here are the functions that the buttons call. If a function starts it will start out with calling some global variables. This is so when the mandelbrot draws again,
+(like with zoom) the color indicators aren't forgotten. Then the color will be chosen. This will be printed so you can check that the button works. Then the
+print_function will be called. This initialises the drawing of the mandelbrot
+'''
+
 def choose_color():
 	global red_indicator,green_indicator,blue_indicator
-	clean_start()
 	color_code = colorchooser.askcolor()
 	print(color_code)
 	red_indicator=color_code[0][0]
 	green_indicator=color_code[0][1]
 	blue_indicator=color_code[0][2]
 	print_function()
-'''
-def red():		#These change the color in the mandelbrot set.
-	global color
-	color='red'
-	clean_start()	#removes the names etc. from the startscreen
-	print("red")	#To know you pushed the button
-	print_function(255,0,0)	#the numbers represent the rgb
-def yellow():
-	global color
-	color='yellow'
-	clean_start()
-	print_function(255,255,0)
-	print("yellow")
-def purple():
-	global color
-	color='purple'
-	clean_start()
-	print_function(98,0,58)
-	print("purple")
-'''
+
 def rainbow():
 	global red_indicator
-	clean_start()
-	red_indicator=666      #I put in 666 because we don't need rgb
-	print_function()
+	red_indicator='rainbow'      #The red_indicator is used as a variable to store the theme. The fact that it is a string makes it so that the program doesn't draw one color.
 	print("rainboww")
+	print_function()
 
 def blue_pink():
 	global red_indicator
-	clean_start()
-	red_indicator=6666      #I put in 6666 because we don't need rgb
-	print_function()
+	red_indicator='blue_pink'
 	print("Blue/Pink")
+	print_function()
 
 def orange_purple():
 	global red_indicator
-	clean_start()
-	red_indicator=66666      #I put in 66666 because we don't need rgb
-	print_function()
+	red_indicator='orange_purple'
 	print("Orange_Purple")
+	print_function()
 
 def start():            #the start button makes a white mandelbrot (and will make the settings window appear)
 	global red_indicator,green_indicator,blue_indicator
-	clean_start()
 	red_indicator=255
 	green_indicator=255
 	blue_indicator=255
-	print_function()
 	print("white")
+	print_function()
 
 def surprised_mdb(): #this surprised Mandelbrot Fractal will take iteration = 20, rainbow color
 	global strategy, red_indicator
-	clean_start()
 	strategy = Strategy_Surprised()
 	red_indicator=666
-	print_function()
 	print("SURPRISED")
+	print_function()
 
 def rotation(): #this rotation Mandelbrot Fractal will take iteration = 20 as defult, but it can be altered.
 	global strategy,rotation
-	clean_start()
 	rotation = True
 	strategy = Strategy_Z2()
-	print_function()
 	print("Layers")
+	print_function()
 
-def clean_start():
-	mandelBrot.geometry('650x650')
-	start_button.grid_forget()
-	Dini_Abdullahi.grid_forget()
-	Myrthe_Post.grid_forget()
-	Paworapas_Kakhai.grid_forget()
-	Robin_Tollenaar.grid_forget()
-	created_by.grid_forget()
-	title.grid_forget()
+'''
+BASIC TKINTER CODE
 
-settings=Tk()		#new window for the user to choose different settings like color
-settings.title('Settings')
-settings.configure(background='yellow')
+Settings
+'''
+
 '''Color Buttons'''
 color_label=Label(settings,text='Choose a color',  font= 'Helvetica 9 bold', padx = 2, pady = 1, bg = 'yellow')
 color_label.grid(row=0,column=0, sticky = NW)
