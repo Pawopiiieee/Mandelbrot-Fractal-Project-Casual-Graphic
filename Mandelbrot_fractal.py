@@ -209,7 +209,7 @@ i=1 # a variable to keep count of the ammount of times that the program has draw
 
 def print_function():
 	global a_min, point_previous,i,red_indicator,green_indicator,blue_indicator, rotation
-	print('ammount of times drawn: {}'.format(i))	#To keep up/check the ammount of times drawn, making it easier to check if zoom if working
+	print('amount of times drawn: {}'.format(i))	#To keep up/check the ammount of times drawn, making it easier to check if zoom if working
 	if i==1:
 		clean_start() #cleaning up the starting screen, but only the first time
 	else:
@@ -283,7 +283,8 @@ def print_function():
 				new_points.append([x_new + cen_x, y_new + cen_y,x_new + cen_x, y_new + cen_y])
 				return new_points
 		
-			if color != 0:
+			if color != 0:     #red_color != 0 or green_color != 0 or blue_color != 0:
+
 				for i in range (0,10,2):	
 					new_mdb = rotate(x,y,i, window_width,window_height)
 					mandelbrotDisplay.create_rectangle(new_mdb, fill=tk_rgb, outline="yellow", width=0)
@@ -313,8 +314,8 @@ def compute_zoom(cen_x,cen_y):
 	return zoom_rect
 def move_point(event):
 	global mandelbrotDisplay, window_height,window_width,zoom_rect
-	half_width = (window_width / zoom_zoom) / 2
-	half_height = (window_height / zoom_zoom) /2
+	half_width = (window_width / zoom_zoom) / 12
+	half_height = (window_height / zoom_zoom) / 12
 	mandelbrotDisplay.delete("all")
 	zoom_rect = mandelbrotDisplay.create_rectangle(event.x-half_width,event.y - half_height,event.x+half_width,event.y+half_height, width = 1)
 def zoom(event):
@@ -339,7 +340,8 @@ print_function will be called. This initialises the drawing of the mandelbrot
 '''
 
 def choose_color():
-	global red_indicator,green_indicator,blue_indicator
+	global red_indicator,green_indicator,blue_indicator,rotation
+	rotation = FALSE
 	color_code = colorchooser.askcolor()
 	print(color_code)
 	red_indicator=color_code[0][0]
@@ -348,25 +350,29 @@ def choose_color():
 	print_function()
 
 def rainbow():
-	global red_indicator
+	global red_indicator,rotation
+	rotation = FALSE
 	red_indicator='rainbow'      #The red_indicator is used as a variable to store the theme. The fact that it is a string makes it so that the program doesn't draw one color.
 	print("rainboww")
 	print_function()
 
 def blue_pink():
-	global red_indicator
+	global red_indicator,rotation
+	rotation = FALSE
 	red_indicator='blue_pink'
 	print("Blue/Pink")
 	print_function()
 
 def orange_purple():
-	global red_indicator
+	global red_indicator,rotation
+	rotation = FALSE
 	red_indicator='orange_purple'
 	print("Orange_Purple")
 	print_function()
 
 def start():            #the start button makes a white mandelbrot (and will make the settings window appear)
-	global red_indicator,green_indicator,blue_indicator
+	global red_indicator,rotation,green_indicator,blue_indicator
+	rotation = FALSE
 	red_indicator=255
 	green_indicator=255
 	blue_indicator=255
@@ -374,17 +380,21 @@ def start():            #the start button makes a white mandelbrot (and will mak
 	print_function()
 
 def surprised_mdb(): #this surprised Mandelbrot Fractal will take iteration = 20, rainbow color
-	global strategy, red_indicator
+	global strategy, rotation,red_indicator
+	rotation = FALSE
 	strategy = Strategy_Surprised()
 	red_indicator='rainbow'
 	print("SURPRISED")
 	print_function()
 
 def rotation(): #this rotation Mandelbrot Fractal will take iteration = 20 as defult, but it can be altered.
-	global strategy,rotation
+	global strategy,rotation #,red_indicator,green_indicator,blue_indicator
 	rotation = True
-	strategy = Strategy_Z2()
-	print("Layers")
+	#red_indicator=0
+	#green_indicator= 15
+	#blue_indicator= 199
+	strategy = Strategy_Z2() #the rotation makes layers only on Z^2. For another higher polynomials, it's skeptical 
+	print("Layers", "Pancake Time!")
 	print_function()
 
 '''
