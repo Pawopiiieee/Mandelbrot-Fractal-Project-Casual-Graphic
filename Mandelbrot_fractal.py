@@ -354,8 +354,9 @@ def update_info(zoom):
 	info.grid(row=10,column=0,columnspan=3)
 
 def start():
-	global red_indicator,green_indicator,blue_indicator
-	print_function()
+	global red_indicator,green_indicator,blue_indicator,color
+	if color!=None:
+		print_function()
 
 def choose_color():
 	global red_indicator,green_indicator,blue_indicator,rotation,color
@@ -397,6 +398,7 @@ def white():            #the start button on the main window makes a white mande
 	green_indicator=255
 	blue_indicator=255
 	print("white")
+	print_function()
 
 def surprised_mdb(): #this surprised Mandelbrot Fractal will take iteration = 20, rainbow color
 	global strategy, rotation,red_indicator
