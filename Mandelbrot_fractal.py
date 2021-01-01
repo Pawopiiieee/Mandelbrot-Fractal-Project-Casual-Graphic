@@ -320,7 +320,11 @@ def compute_zoom(cen_x,cen_y):
 	zoom_rect[3] = mouse_y + (new_height / float(zoom_zoom))
 	return zoom_rect
 def move_point(event):
-	global mandelbrotDisplay, window_height,window_width,zoom_rect
+	global mandelbrotDisplay, window_height,window_width,zoom_rect 
+	try:
+		zoom_zoom=zoom_slider.get()
+	except:
+		zoom_zoom=3
 	half_width = (window_width / zoom_zoom) / 12
 	half_height = (window_height / zoom_zoom) / 12
 	mandelbrotDisplay.delete("all")
@@ -378,17 +382,19 @@ def rainbow():
 	update_info(zoom_slider.get())
 
 def blue_pink():
-	global red_indicator,rotation
+	global red_indicator,rotation,color
 	rotation = FALSE
 	red_indicator='blue_pink'
 	print("Blue/Pink")
+	color='blue_pink'
 	update_info(zoom_slider.get())
 
 def orange_purple():
-	global red_indicator,rotation
+	global red_indicator,rotation,color
 	rotation = FALSE
 	red_indicator='orange_purple'
 	print("Orange_Purple")
+	color='orange_purple'
 	update_info(zoom_slider.get())
 
 def white():            #the start button on the main window makes a white mandelbrot (and will make the settings window appear)
