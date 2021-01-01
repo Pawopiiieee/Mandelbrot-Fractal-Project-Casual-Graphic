@@ -392,12 +392,14 @@ def orange_purple():
 	update_info(zoom_slider.get())
 
 def white():            #the start button on the main window makes a white mandelbrot (and will make the settings window appear)
-	global red_indicator,rotation,green_indicator,blue_indicator
+	global red_indicator,rotation,green_indicator,blue_indicator,color
 	rotation = FALSE
 	red_indicator=255
 	green_indicator=255
 	blue_indicator=255
 	print("white")
+	color='white'
+	update_info(zoom_slider.get())
 	print_function()
 
 def surprised_mdb(): #this surprised Mandelbrot Fractal will take iteration = 20, rainbow color
