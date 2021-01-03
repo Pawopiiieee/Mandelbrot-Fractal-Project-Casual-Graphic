@@ -160,6 +160,8 @@ def get_max_iter():
 		max_iterations=int(iteration_entry.get()) #this gets the text given in the iteration entry. 
 	except:                                       #If none is given or the text is not an ineger, the max iterations becomes 20
 		max_iterations = 20
+	if max_iterations<3:
+		max_iterations=3
 	return max_iterations
 """
 this function will take the value from drop down box 
