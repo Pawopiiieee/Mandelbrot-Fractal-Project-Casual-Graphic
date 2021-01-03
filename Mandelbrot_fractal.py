@@ -17,11 +17,12 @@ mandelBrot.configure(background='#f5f3cb')
 window_width = 650  # in pixels
 window_height = 650
 mandelbrotDisplay = Canvas(mandelBrot, bd=0, height=window_height, width=window_width)
-# Coordinate point. PLEASE DON'T CHANGE, otherwise the little boi will get chubby shape 
-a_min = -2.10  # axis ranges:                                 
-a_max = 1.15  # a horizontal, real numbers part
-b_min = -1.80  # b vertical, imaginary numbers part
-b_max = 1.7   #We could make the user have a distort button of some sorts if we do wanna mess with it
+# Coordinate point. the mdb grows up. 
+# so, we can see its full radiant. (if the value of a_min/max, b_min/max exceed than 2)
+a_min = -2.25  # axis ranges:                                 
+a_max = 2.25  # a horizontal, real numbers part
+b_min = -2.25  # b vertical, imaginary numbers part
+b_max = 2.25  #We could make the user have a distort button of some sorts if we do wanna mess with it
 
 #some variables for the color
 red_indicator=0
