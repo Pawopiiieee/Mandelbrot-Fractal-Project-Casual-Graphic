@@ -354,7 +354,7 @@ def open_settings(): #new window for the user to choose different settings like 
 	surprised_label = Label(settings,text= " Do you want to see the secret surprise? Just click here!", bg = '#f5f3cb',height=2)
 	surprised_label.grid(row = 6, column = 0,columnspan=3,sticky=W)
 	'''label for Layers/3D''' #try 3D by rotation 
-	layer_button=Button(settings,bg='#969696',width=15,fg='#003333',text='Layers',activeforeground='#323232', command=layer_rotation,height=1)
+	layer_button=Button(settings,bg='#f5f3cb',width=15,fg='#003333',text='Layers',activeforeground='#323232', command=layer_rotation,height=1)
 	layer_button.grid(row=7,column=3,sticky=W)
 	layer_label = Label(settings,text= " An attempt to make 3D by adding layers. (draws immediately)", bg = '#f5f3cb',height=2)
 	layer_label.grid(row = 7, column = 0,columnspan=3,sticky=W)
@@ -466,7 +466,6 @@ def white():            #the start button on the main window makes a white mande
 	green_indicator=255
 	blue_indicator=255
 	print("white")
-	color='white'
 	print_function()
 	open_settings()
 
