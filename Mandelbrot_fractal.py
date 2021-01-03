@@ -4,15 +4,15 @@ from math import *
 from tkinter import *
 import time
 from tkinter import colorchooser
-import math
+from tkinter import messagebox
 
 begin = time.time()
-
 '''BASIC TKINTER CODE TO CRATE THE WINDOWS'''
 mandelBrot = Tk()
-mandelBrot.geometry('400x200')
+
 mandelBrot.title("The Mandelbrot Fractal with Python")
 mandelBrot.configure(background='#f5f3cb')
+
 #window scales can be altered
 window_width = 650  # in pixels
 window_height = 650
@@ -22,17 +22,20 @@ a_min = -2.10  # axis ranges:
 a_max = 1.15  # a horizontal, real numbers part
 b_min = -1.80  # b vertical, imaginary numbers part
 b_max = 1.7   #We could make the user have a distort button of some sorts if we do wanna mess with it
-
 #some variables for the color
 red_indicator=0
 green_indicator=0
 blue_indicator=0
-
 rotation = False
-
-settings=Tk()		#new window for the user to choose different settings like color
-settings.title('Settings')
+	
+settings = 	Tk()	#new window for the user to choose different settings like color
+settings.title('MANDELBROT FRACTAL PROJECT')
 settings.configure(background='#f5f3cb')
+
+my_menu = Menu(settings)
+settings.config(menu=my_menu)
+
+
 """
 3D (Incompleted)
 def mandelbrotSet(x_mdb, y_mdb,z_mdb):
@@ -116,11 +119,9 @@ def mandelbrotSet(x_mdb, y_mdb,max_iterations, strategy):
 			return iteration_count 
 	mandelbrot_value = recur_mandelbrot(0,0,0) #the intial values for x,y,iteration_count = 0
 	return mandelbrot_value
-
 """
 To project range on window (aka. plot each pixel)
 """
-
 def draw_mdb(max_iterations):
 	global strategy,a_min,a_max,b_max,b_min
 	a_axis = []  # list of points on the real number axis
@@ -155,7 +156,6 @@ def draw_mdb(max_iterations):
 # Draw picture.
 point_previous = a_min  # To keep track of the end of a pixel line in the window
 point_current = 0
-
 '''getting the max ammount of itterations so we know how many itterations to draw'''
 def get_max_iter():
 	try:
@@ -181,7 +181,6 @@ def get_strategy_from_selection(selection):
 		strategy = Strategy_Z3()
 	else:
 		strategy = Strategy_Z2()
-
 '''This code can use themes. Here isn't one color chosen. A tuple is filled with colors that matches the colors of the theme.'''
 def color_theme(red_indicator,numberOfIters,max_iter,theme,length_theme):
 	if numberOfIters<max_iter:
@@ -193,7 +192,6 @@ def color_theme(red_indicator,numberOfIters,max_iter,theme,length_theme):
 		green_color=0
 		blue_color=0
 	return red_color, green_color, blue_color
-
 '''clean_start will remove all the text and buttons from the main window.'''
 def clean_start():
 	mandelBrot.geometry('650x650')	#rescaling the window so the drawing of the mandelbrot will fit
@@ -205,11 +203,8 @@ def clean_start():
 	created_by.grid_forget()
 	title.grid_forget()
 	start_Label.grid_forget()
-
 i=1 # a variable to keep count of the ammount of times that the program has drawn
-
 '''This is the main function drawing the mandelbrot'''
-
 def print_function():
 	global a_min, point_previous,i,red_indicator,green_indicator,blue_indicator, rotation
 	print('amount of times drawn: {}'.format(i))	#To keep up/check the ammount of times drawn, making it easier to check if zoom if working
@@ -231,7 +226,6 @@ def print_function():
 	to_draw = draw_mdb(get_max_iter())
 	iteration_list=to_draw[0]
 	iter_range=to_draw[1]
-
 	for point in iteration_list:	#here starts the drawing of the brot, it draws every pixel one by one
 		point_current = point[0]  # point on real number
 		if point_current >= point_previous:
@@ -260,7 +254,6 @@ def print_function():
 		if blue_color>255:
 			blue_color=255
 		tk_rgb = "#%02x%02x%02x" % (red_color, green_color, blue_color)		#turning the rgb into hex
-
 		"""
 		rotate the mandelbrot to make layer. This part can be manipulated for x or y axis rotation.
 		But I'll leave it for further development due to limited resources. Plus, to be able to look 
@@ -287,7 +280,6 @@ def print_function():
 				return new_points
 		
 			if color != 0:     #red_color != 0 or green_color != 0 or blue_color != 0:
-
 				for i in range (0,10,2):	
 					new_mdb = rotate(x,y,i, window_width,window_height)
 					mandelbrotDisplay.create_rectangle(new_mdb, fill=tk_rgb, outline="#f5f3cb", width=0)
@@ -302,7 +294,6 @@ def print_function():
 """
 Shallow zoom in / out
 """
-
 def compute_zoom(cen_x,cen_y):
 	global a_min,a_max,b_min,b_max
 	try:
@@ -320,6 +311,7 @@ def compute_zoom(cen_x,cen_y):
 	zoom_rect[3] = mouse_y + (new_height / float(zoom_zoom))
 	return zoom_rect
 def move_point(event):
+	global mandelbrotDisplay, window_height,window_width,zoom_rect
 	global mandelbrotDisplay, window_height,window_width,zoom_rect 
 	try:
 		zoom_zoom=zoom_slider.get()
@@ -341,10 +333,8 @@ def zoom(event):
 zoom_rect = mandelbrotDisplay.create_rectangle(0,0,0,0)
 mandelbrotDisplay.bind('<Button-1>',zoom)
 mandelbrotDisplay.bind('<Button-2>',move_point)
-
 '''
 COLOR FUNCTIONS
-
 Here are the functions that the buttons call. If a function starts it will start out with calling some global variables. This is so when the mandelbrot draws again,
 (like with zoom) the color indicators aren't forgotten. Then the color will be chosen. This will be printed so you can check that the button works. Then the
 print_function will be called. This initialises the drawing of the mandelbrot
@@ -356,12 +346,10 @@ def update_info(zoom):
 	max_iter=get_max_iter()
 	info=Label(settings,text='Color= {}, Exponent= {}, Amount of iterations= {}, Amount of zoom= {}'.format(color,exponent,max_iter,zoom),bg='#f5f3cb')
 	info.grid(row=10,column=0,columnspan=3)
-
 def start():
 	global red_indicator,green_indicator,blue_indicator,color
 	if color!=None:
 		print_function()
-
 def choose_color():
 	global red_indicator,green_indicator,blue_indicator,rotation,color
 	rotation = FALSE
@@ -372,7 +360,6 @@ def choose_color():
 	blue_indicator=int(color_code[0][2])
 	color=str( "#%02x%02x%02x" % (red_indicator, green_indicator, blue_indicator))
 	update_info(zoom_slider.get())
-
 def rainbow():
 	global red_indicator,rotation,color
 	rotation = FALSE
@@ -382,6 +369,7 @@ def rainbow():
 	update_info(zoom_slider.get())
 
 def blue_pink():
+	global red_indicator,rotation
 	global red_indicator,rotation,color
 	rotation = FALSE
 	red_indicator='blue_pink'
@@ -390,6 +378,7 @@ def blue_pink():
 	update_info(zoom_slider.get())
 
 def orange_purple():
+	global red_indicator,rotation
 	global red_indicator,rotation,color
 	rotation = FALSE
 	red_indicator='orange_purple'
@@ -407,7 +396,6 @@ def white():            #the start button on the main window makes a white mande
 	color='white'
 	update_info(zoom_slider.get())
 	print_function()
-
 def surprised_mdb(): #this surprised Mandelbrot Fractal will take iteration = 20, rainbow color
 	global strategy, rotation,red_indicator
 	rotation = FALSE
@@ -415,7 +403,6 @@ def surprised_mdb(): #this surprised Mandelbrot Fractal will take iteration = 20
 	red_indicator='rainbow'
 	print("SURPRISED")
 	update_info(zoom_slider.get())
-
 def rotation(): #this rotation Mandelbrot Fractal will take iteration = 20 as defult, but it can be altered.
 	global strategy,rotation #,red_indicator,green_indicator,blue_indicator
 	rotation = True
@@ -426,10 +413,27 @@ def rotation(): #this rotation Mandelbrot Fractal will take iteration = 20 as de
 	print("Layers", "Pancake Time!")
 	print_function()
 
+my_menu = Menu(settings)
+settings.config(menu=my_menu)
+def our_command():
+    my_label = Label(settings, text = "Dini Abdullahi, Myrthe Post, Paworapas Kakhai, Robin Tollenaar")
+    my_label.grid()
+
+
+file_menu = Menu(my_menu)
+my_menu.add_cascade(label = "Click on File to Exit. Or to see the contributors to our project", menu = file_menu)
+file_menu.add_command(label = "Exit", command = settings.quit)
+
+file_menu.add_command(label = "Contributors", command = our_command)
+
+#Click file then contributors to see the contributors to the project.
+
+
+
+
 '''Color Buttons'''
 color_label=Label(settings,text='Choose a color',  font= 'Helvetica 9 bold', padx = 2, pady = 1, bg = '#f5f3cb',height=2)
 color_label.grid(row=0,column=0,columnspan=4,sticky=W)
-
 rainbow_button=Button(settings,bg='#969696',width=15,fg='#3058d1',text='RAINBOW',activeforeground='#323232',command=rainbow,activebackground='#323232', relief = GROOVE,height=1 )	#a purple button, starting the function purple()
 rainbow_button.grid(row=1,column=1,sticky=W)
 blue_pink_button=Button(settings, bg='#990099',width=15,text='Blue/Pink',command=blue_pink,height=1)
@@ -474,36 +478,20 @@ layer_label.grid(row = 7, column = 0,columnspan=3,sticky=W)
 '''starting button for settings window'''
 start_button_settings=Button(settings,fg='#f5f3cb',width=10,bg='#9c9b8f',text='start',command=start,height=1)
 start_button_settings.grid(row=10,column=3,sticky=W)
-
 '''starting screen'''
-title=Label(mandelBrot,text='MANDELBROT FRACTAL PROJECT', bg  = '#f5f3cb')
-title.grid(row=0,column=1)
-title.configure(font="Verdana 8 underline")
+
 start_button=Button(mandelBrot,text='start',command=white, bg = '#f5f3cb', height = 2, width = 15, )
 start_Label = Label(mandelBrot, text = " Start the mandelbrot:", bg = '#f5f3cb',  justify = CENTER)
-
 start_Label.grid(row = 3, column = 1, )
 start_button.grid(row=5,column=1, sticky = NS)
 
-created_by=Label(mandelBrot,text='Created by:', bg = '#f5f3cb')
-created_by.grid(row=2,column=0)
 
-
-Dini_Abdullahi=Label(mandelBrot,text='Dini Abdullahi ME1',fg='blue', bg = '#f5f3cb',)
-Dini_Abdullahi.grid(row=3,column=0)
-Dini_Abdullahi.configure(font="Verdana 8 underline")
-Myrthe_Post=Label(mandelBrot,text='Myrthe Post ME1',fg='blue',bg = '#f5f3cb')
-Myrthe_Post.grid(row=4,column=0)
-Myrthe_Post.configure(font="Verdana 8 underline")
-Paworapas_Kakhai=Label(mandelBrot,text='Paworapas Kakhai ME1',fg='blue',bg = '#f5f3cb')
-Paworapas_Kakhai.grid(row=5,column=0)
-Paworapas_Kakhai.configure(font="Verdana 8 underline")
-Robin_Tollenaar=Label(mandelBrot,text='Robin Tollenaar ME1',fg='blue',bg = '#f5f3cb')
-Robin_Tollenaar.grid(row=6,column=0)
-Robin_Tollenaar.configure(font="Verdana 8 underline")
 end_time = time.time()
 print("Test the Mandelbrot with Python")
 total = end_time - begin
 print ("Total time consumption = ", total)
+
+
 mandelBrot.mainloop()
 settings.mainloop()
+
