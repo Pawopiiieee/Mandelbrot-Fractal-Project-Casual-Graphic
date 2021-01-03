@@ -5,14 +5,23 @@ from tkinter import *
 import time
 from tkinter import colorchooser
 import math
+from tkinter import messagebox
 
 begin = time.time()
 
 '''BASIC TKINTER CODE TO CRATE THE WINDOWS'''
+
 mandelBrot = Tk()
 mandelBrot.geometry('400x200')
 mandelBrot.title("The Mandelbrot Fractal with Python")
 mandelBrot.configure(background='#f5f3cb')
+
+my_menu = Menu(mandelBrot)
+mandelBrot.config(menu = my_menu)
+
+file_menu = Menu(my_menu)
+my_menu.add_cascade(label = "Click to Exit", menu = file_menu)
+file_menu.add_command(label = "Exit", command = mandelBrot.quit)
 #window scales can be altered
 window_width = 650  # in pixels
 window_height = 650
@@ -307,11 +316,21 @@ settings = None
 zoom_slider = None
 iteration_entry = None
 
+
 def open_settings(): #new window for the user to choose different settings like color
 	global settings, zoom_slider,iteration_entry
-	settings = Toplevel(mandelBrot)
+	settings = Toplevel()
 	settings.title('Settings')
 	settings.configure(background='#f5f3cb')
+
+	
+
+
+
+
+
+
+
 	'''Color Buttons'''
 	color_label=Label(settings,text='Choose a color',  font= 'Helvetica 9 bold', padx = 2, pady = 1, bg = '#f5f3cb',height=2)
 	color_label.grid(row=0,column=0,columnspan=4,sticky=W)
@@ -407,7 +426,6 @@ mandelbrotDisplay.bind('<Button-2>',move_point)
 
 '''
 COLOR FUNCTIONS
-
 Here are the functions that the buttons call. If a function starts it will start out with calling some global variables. This is so when the mandelbrot draws again,
 (like with zoom) the color indicators aren't forgotten. Then the color will be chosen. This will be printed so you can check that the button works. Then the
 print_function will be called. This initialises the drawing of the mandelbrot
