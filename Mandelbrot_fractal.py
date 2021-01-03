@@ -301,6 +301,7 @@ def print_function():
 Shallow zoom in / out
 """
 
+
 def open_settings(): #new window for the user to choose different settings like color
 	global settings, zoom_slider,iteration_entry
 	settings = Toplevel(mandelBrot)
@@ -348,7 +349,7 @@ def open_settings(): #new window for the user to choose different settings like 
 	surprised_label = Label(settings,text= " Do you want to see the secret surprise? Just click here!", bg = '#f5f3cb',height=2)
 	surprised_label.grid(row = 6, column = 0,columnspan=3,sticky=W)
 	'''label for Layers/3D''' #try 3D by rotation 
-	layer_button=Button(settings,bg='#969696',width=15,fg='#003333',text='Layers',activeforeground='#323232', command=rotation,height=1)
+	layer_button=Button(settings,bg='#969696',width=15,fg='#003333',text='Layers',activeforeground='#323232', command=layer_rotation,height=1)
 	layer_button.grid(row=7,column=3,sticky=W)
 	layer_label = Label(settings,text= " An attempt to make 3D by adding layers. (draws immediately)", bg = '#f5f3cb',height=2)
 	layer_label.grid(row = 7, column = 0,columnspan=3,sticky=W)
@@ -472,7 +473,7 @@ def surprised_mdb(): #this surprised Mandelbrot Fractal will take iteration = 20
 	print("SURPRISED")
 	update_info(zoom_slider.get())
 
-def rotation(): #this rotation Mandelbrot Fractal will take iteration = 20 as defult, but it can be altered.
+def layer_rotation(): #this rotation Mandelbrot Fractal will take iteration = 20 as defult, but it can be altered.
 	global strategy,rotation #,red_indicator,green_indicator,blue_indicator
 	rotation = True
 	#red_indicator=0
@@ -481,6 +482,7 @@ def rotation(): #this rotation Mandelbrot Fractal will take iteration = 20 as de
 	strategy = Strategy_Z2() #the rotation makes layers only on Z^2. For another higher polynomials, it's skeptical 
 	print("Layers", "Pancake Time!")
 	print_function()
+
 
 '''starting screen'''
 title=Label(mandelBrot,text='MANDELBROT FRACTAL PROJECT', bg  = '#f5f3cb')
