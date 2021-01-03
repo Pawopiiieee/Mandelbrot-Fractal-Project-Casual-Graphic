@@ -196,12 +196,6 @@ def color_theme(red_indicator,numberOfIters,max_iter,theme,length_theme):
 def clean_start():
 	mandelBrot.geometry('650x650')	#rescaling the window so the drawing of the mandelbrot will fit
 	start_button.grid_forget()		#removing the start button
-	Dini_Abdullahi.grid_forget()	#removing the text labels
-	Myrthe_Post.grid_forget()
-	Paworapas_Kakhai.grid_forget()
-	Robin_Tollenaar.grid_forget()
-	created_by.grid_forget()
-	title.grid_forget()
 	start_Label.grid_forget()
 i=1 # a variable to keep count of the ammount of times that the program has drawn
 '''This is the main function drawing the mandelbrot'''
@@ -266,9 +260,9 @@ def print_function():
 				color = 20
 			tk_rgb = "#%02x%02x%02x" % (0, 15 , color)
 			def rotate(x,y, degree,window_width,window_height):
-				degree = math.radians(degree)
-				cos_v = math.cos(degree)
-				sin_v = math.sin(degree)
+				degree = radians(degree)
+				cos_v = cos(degree)
+				sin_v = sin(degree)
 				cen_x = window_width
 				cen_y = window_height
 				new_points = []
