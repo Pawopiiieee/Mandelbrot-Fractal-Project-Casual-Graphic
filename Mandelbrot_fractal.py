@@ -300,7 +300,9 @@ def print_function():
 """
 Shallow zoom in / out
 """
-
+settings = None
+zoom_slider = None
+iteration_entry = None
 
 def open_settings(): #new window for the user to choose different settings like color
 	global settings, zoom_slider,iteration_entry
@@ -320,19 +322,22 @@ def open_settings(): #new window for the user to choose different settings like 
 	'''Button for choosing a color, a colorwindow will pop up'''
 	color_chooser_button = Button(settings, text = "Select color",width=12 , command = choose_color, bg = '#f5f3cb' ,height=1) 
 	color_chooser_button.grid(row=1, column=0,sticky=W)
+
 	'''Entry for iterations'''
 	iteration_label1=Label(settings,text='Amount of itterations, at least 3', bg = '#f5f3cb',height=2)
 	iteration_entry=Entry(settings,bg = 'white',width=12)
 	iteration_entry.grid(row=2,column=3,sticky=W)
 	iteration_label1.grid(row=2,column=0,columnspan=2,sticky=W)
+
 	'''labels and slider for zoom'''
 	zoom_label=Label(settings,text="Click the fractal to zoom in(Please, be patient.)", bg = '#f5f3cb',height=2)
 	zoom_label.grid(row=9,column=0,columnspan=5,sticky=W)
-	zoom_slider_label=Label(settings,text='Choose the ammount you want to zoom, 1 for zoom out.',bg='#f5f3cb',height=2)
+	zoom_slider_label=Label(settings,text='Choose the amount you want to zoom, 1 for zoom out.',bg='#f5f3cb',height=2)
 	zoom_slider_label.grid(row=8,column=0, columnspan=3,sticky=W)
 	zoom_slider=Scale(settings, from_=1,to=10,orient=HORIZONTAL,bg='#f5f3cb',command=update_info)
 	zoom_slider.grid(row=8,column=3,sticky=W)
 	zoom_slider.set(2)
+
 	'''exponent'''
 	exp_option = ["2", "3", "4", "5", "10"] 
 	variable = IntVar(settings)
