@@ -483,24 +483,20 @@ start_button=Button(mandelBrot,text='start',command=white, bg = '#f5f3cb', heigh
 start_Label = Label(mandelBrot, text = " Start the mandelbrot:", bg = '#f5f3cb',  justify = CENTER)
 
 start_Label.grid(row = 3, column = 1, )
-start_button.grid(row=5,column=1, sticky = NS)
+start_button.grid(row=5,column=1, sticky = NS,rowspan=2)
 
 created_by=Label(mandelBrot,text='Created by:', bg = '#f5f3cb')
 created_by.grid(row=2,column=0)
 
 
-Dini_Abdullahi=Label(mandelBrot,text='Dini Abdullahi ME1',fg='blue', bg = '#f5f3cb',)
+Dini_Abdullahi=Label(mandelBrot,text='Dini Abdullahi ME1',fg='blue', bg = '#f5f3cb',font="Verdana 8 underline")
 Dini_Abdullahi.grid(row=3,column=0)
-Dini_Abdullahi.configure(font="Verdana 8 underline")
-Myrthe_Post=Label(mandelBrot,text='Myrthe Post ME1',fg='blue',bg = '#f5f3cb')
+Myrthe_Post=Label(mandelBrot,text='Myrthe Post ME1',fg='blue',bg = '#f5f3cb',font="Verdana 8 underline")
 Myrthe_Post.grid(row=4,column=0)
-Myrthe_Post.configure(font="Verdana 8 underline")
-Paworapas_Kakhai=Label(mandelBrot,text='Paworapas Kakhai ME1',fg='blue',bg = '#f5f3cb')
+Paworapas_Kakhai=Label(mandelBrot,text='Paworapas Kakhai ME1',fg='blue',bg = '#f5f3cb',font="Verdana 8 underline")
 Paworapas_Kakhai.grid(row=5,column=0)
-Paworapas_Kakhai.configure(font="Verdana 8 underline")
-Robin_Tollenaar=Label(mandelBrot,text='Robin Tollenaar ME1',fg='blue',bg = '#f5f3cb')
+Robin_Tollenaar=Label(mandelBrot,text='Robin Tollenaar ME1',fg='blue',bg = '#f5f3cb',font="Verdana 8 underline")
 Robin_Tollenaar.grid(row=6,column=0)
-Robin_Tollenaar.configure(font="Verdana 8 underline")
 end_time = time.time()
 print("Test the Mandelbrot with Python")
 total = end_time - begin
