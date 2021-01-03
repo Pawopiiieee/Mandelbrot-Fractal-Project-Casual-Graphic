@@ -183,7 +183,7 @@ def get_strategy_from_selection(selection):
 		strategy = Strategy_Z2()
 
 '''This code can use themes. Here isn't one color chosen. A tuple is filled with colors that matches the colors of the theme.'''
-def color_theme(red_indicator,numberOfIters,max_iter,theme,length_theme):
+def color_theme(numberOfIters,max_iter,theme,length_theme):
 	if numberOfIters<max_iter:
 		red_color =theme[numberOfIters%length_theme][0]		#Here the color is assigned. Every iteration has it's own color.
 		green_color =theme[numberOfIters%length_theme][1]	#using modulo, the iterations will keep getting colors, going through the tuple
@@ -243,7 +243,7 @@ def print_function():
 			numberOfIters = point[2]
 		
 		if type(red_indicator)==str:	#if red indicator is a string, than a theme must be used
-			red_color, green_color, blue_color = color_theme(red_indicator,numberOfIters,max_iter,theme,len_theme)
+			red_color, green_color, blue_color = color_theme(numberOfIters,max_iter,theme,len_theme)
 		else:
 			red_color=log(numberOfIters, iter_range)*red_indicator			#if a single color is choosen, the fist few iterations will be dark
 			green_color=log(numberOfIters, iter_range)*green_indicator		#this is because the colors get a low value.the higher the iteration, the brighter the color
@@ -354,6 +354,8 @@ color=None
 def update_info(zoom):
 	global exponent,color
 	max_iter=get_max_iter()
+	if max_iter<3:
+		max_iter=3
 	info=Label(settings,text='Color= {}, Exponent= {}, Amount of iterations= {}, Amount of zoom= {}'.format(color,exponent,max_iter,zoom),bg='#f5f3cb')
 	info.grid(row=10,column=0,columnspan=3)
 
@@ -440,7 +442,7 @@ orange_purple_button.grid(row=1,column=3,sticky=W)
 color_chooser_button = Button(settings, text = "Select color",width=12 , command = choose_color, bg = '#f5f3cb' ,height=1) 
 color_chooser_button.grid(row=1, column=0,sticky=W)
 '''Entry for iterations'''
-iteration_label1=Label(settings,text='Amount of itterations', bg = '#f5f3cb',height=2)
+iteration_label1=Label(settings,text='Amount of itterations, at least 3', bg = '#f5f3cb',height=2)
 iteration_entry=Entry(settings,bg = 'white',width=12)
 iteration_entry.grid(row=2,column=3,sticky=W)
 iteration_label1.grid(row=2,column=0,columnspan=2,sticky=W)
